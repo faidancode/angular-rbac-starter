@@ -43,7 +43,9 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private abilityService: AbilityService,
-  ) {}
+  ) {
+    this._restorePermissions();
+  }
 
   // --- Login ---
   login(email: string, password: string): Observable<void> {
@@ -59,6 +61,7 @@ export class AuthService {
           // --- persist ---
           localStorage.setItem('hris_token', data.accessToken);
           localStorage.setItem('hris_user', JSON.stringify(data.user));
+          localStorage.setItem('hris_permissions', JSON.stringify(data.permissions));
 
           // --- update state ---
           this._token.set(data.accessToken);
@@ -81,7 +84,7 @@ export class AuthService {
 
   // --- Logout ---
   logout(): void {
-    ['hris_token', 'hris_user'].forEach((k) => localStorage.removeItem(k));
+    ['hris_token', 'hris_user', 'hris_permissions'].forEach((k) => localStorage.removeItem(k));
 
     this._token.set(null);
     this._user.set(null);
@@ -110,6 +113,17 @@ export class AuthService {
       return JSON.parse(localStorage.getItem('hris_user') ?? 'null');
     } catch {
       return null;
+    }
+  }
+
+  private _restorePermissions(): void {
+    try {
+      const perms = JSON.parse(localStorage.getItem('hris_permissions') ?? 'null');
+      if (perms) {
+        this.abilityService.setPermissions(perms);
+      }
+    } catch (e) {
+      console.error('Failed to restore permissions', e);
     }
   }
 }

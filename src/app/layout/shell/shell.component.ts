@@ -1,13 +1,13 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LucideSearch } from '@lucide/angular';
+import { LucideSearch, LucideMenu } from '@lucide/angular';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, LucideSearch],
+  imports: [RouterOutlet, SidebarComponent, LucideSearch, LucideMenu],
   template: `
     <div
       class="flex h-screen bg-white text-[#0f172a] font-['Plus_Jakarta_Sans'] selection:bg-[#0f172a]/10"
@@ -22,22 +22,26 @@ import { AuthService } from '../../core/services/auth.service';
         <header
           class="h-20 flex items-center justify-between px-10 border-b border-slate-200 bg-white/80 backdrop-blur-xl z-30 sticky top-0"
         >
-          <div class="flex flex-col">
-            <span class="text-[10px] uppercase tracking-[0.3em] text-slate-400 font-bold"
-              >Current Workspace</span
+          <div class="flex items-center gap-6">
+            <button
+              (click)="isCollapsed.set(!isCollapsed())"
+              class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-[#0f172a] hover:bg-slate-50 transition-all rounded-full group"
             >
-            <h1 class="text-sm font-black tracking-tight text-[#0f172a] flex items-center gap-2">
-              <span class="w-2 h-2 bg-[#e84e1b] animate-pulse"></span>
-              CORE_SYSTEM / {{ user()?.roleName ?? 'GUEST' }}
-            </h1>
+              <svg lucideMenu [size]="20" class="group-hover:scale-110 transition-transform"></svg>
+            </button>
+
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase tracking-[0.3em] text-slate-400 font-bold"
+                >Current Workspace</span
+              >
+              <h1 class="text-sm font-black tracking-tight text-[#0f172a] flex items-center gap-2">
+                <span class="w-2 h-2 bg-[#e84e1b] animate-pulse"></span>
+                CORE_SYSTEM / {{ user()?.roleName ?? 'GUEST' }}
+              </h1>
+            </div>
           </div>
 
           <div class="flex items-center gap-6">
-            <button
-              class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-[#0f172a] hover:bg-slate-50 transition-all rounded-full"
-            >
-              <svg lucideSearch [size]="20"></svg>
-            </button>
 
             <div class="flex items-center gap-4 border-l border-slate-100 pl-6">
               <div class="flex flex-col text-right hidden sm:flex">
@@ -110,4 +114,5 @@ export class ShellComponent {
   );
 
   protected readonly LucideSearch = LucideSearch;
+  protected readonly LucideMenu = LucideMenu;
 }

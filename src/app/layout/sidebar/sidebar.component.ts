@@ -76,22 +76,14 @@ import { NavItem } from './sidebar.types';
       </nav>
 
       <!-- FOOTER -->
-      <div class="p-6 border-t border-white/5 bg-[#0a0f1d]">
-        <button
-          (click)="toggleCollapse.emit()"
-          class="w-full flex items-center justify-center gap-3 py-3 text-slate-500 hover:text-white hover:bg-white/5 transition-all"
-        >
-          <svg
-            [lucideIcon]="collapsed() ? LucideChevronRight : LucideChevronLeft"
-            [size]="20"
-          ></svg>
-
-          @if (!collapsed()) {
-            <span class="text-[10px] font-black uppercase tracking-[0.3em]">
-              Minimize
-            </span>
-          }
-        </button>
+      <div class="p-6 border-t border-white/5 bg-[#0a0f1d] flex items-center justify-center">
+        @if (!collapsed()) {
+          <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
+            SYSTEM_ONLINE
+          </span>
+        } @else {
+          <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+        }
       </div>
     </aside>
   `,
