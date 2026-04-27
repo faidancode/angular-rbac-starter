@@ -1,5 +1,8 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
+import { CommonModule } from '@angular/common';
+import { LucideSearch } from '@lucide/angular';
+
 
 interface Employee {
   id: number;
@@ -14,88 +17,75 @@ interface Employee {
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [HasPermissionDirective],
+  imports: [CommonModule, HasPermissionDirective, LucideSearch],
   template: `
-    <div class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-bold text-white">Employee Directory</h2>
-          <p class="text-slate-400 text-sm mt-1">
-            {{ filtered().length }} of {{ employees.length }} employees
-          </p>
+    <div class="employees-container">
+      <div class="employees-header">
+        <div class="header-content">
+          <h2>Employee Directory</h2>
+          <p>{{ filtered().length }} of {{ employees.length }} employees</p>
         </div>
-        <div class="flex items-center gap-3">
-          <input
-            (input)="search.set($any($event.target).value)"
-            placeholder="Search employees..."
-            class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500
-                   focus:outline-none focus:ring-2 focus:ring-primary-500/50 w-64 transition-all"
-          />
+        <div class="header-actions">
+          <div class="search-field">
+            <svg lucideSearch class="search-icon" [size]="18"></svg>
+            <input
+              (input)="search.set($any($event.target).value)"
+              placeholder="Search employees..."
+            />
+          </div>
           <button
-            *hasPermission="'write:employee'"
-            class="bg-primary-600 hover:bg-primary-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl
-                   transition-all hover:-translate-y-0.5 shadow-lg shadow-primary-600/30 whitespace-nowrap"
+            *hasPermission="'Employee:create'"
+            class="primary-button"
           >
-            + Add Employee
+            <span>+ Add Employee</span>
           </button>
         </div>
       </div>
 
-      <div class="glass-card overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full">
+      <div class="hris-table-wrapper">
+        <div class="table-responsive">
+          <table>
             <thead>
-              <tr class="border-b border-white/5">
+              <tr>
                 @for (col of columns; track col) {
-                  <th
-                    class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-5 py-4"
-                  >
-                    {{ col }}
-                  </th>
+                  <th>{{ col }}</th>
                 }
-                <th class="px-5 py-4"></th>
+                <th style="width: 150px"></th>
               </tr>
             </thead>
             <tbody>
               @for (emp of filtered(); track emp.id) {
-                <tr class="border-b border-white/5 hover:bg-white/3 transition-colors group">
-                  <td class="px-5 py-4">
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-9 h-9 rounded-full bg-primary-600/40 flex items-center justify-center
-                                  text-sm font-semibold text-primary-300 shrink-0"
-                      >
-                        {{ emp.initials }}
-                      </div>
-                      <div>
-                        <p class="text-sm font-medium text-white">{{ emp.name }}</p>
-                        <p class="text-xs text-slate-500">{{ emp.nip }}</p>
+                <tr>
+                  <td>
+                    <div class="employee-info-cell">
+                      <div class="avatar">{{ emp.initials }}</div>
+                      <div class="details">
+                        <span class="name">{{ emp.name }}</span>
+                        <span class="nip">{{ emp.nip }}</span>
                       </div>
                     </div>
                   </td>
-                  <td class="px-5 py-4 text-sm text-slate-300">{{ emp.department }}</td>
-                  <td class="px-5 py-4 text-sm text-slate-300">{{ emp.position }}</td>
-                  <td class="px-5 py-4">
+                  <td style="color: #64748b">{{ emp.department }}</td>
+                  <td style="color: #64748b">{{ emp.position }}</td>
+                  <td>
                     <span
-                      [class]="statusClass(emp.status)"
-                      class="text-xs font-medium px-2.5 py-1 rounded-full"
+                      class="status-badge"
+                      [ngClass]="'status-' + emp.status.toLowerCase().replace(' ', '-')"
                     >
                       {{ emp.status }}
                     </span>
                   </td>
-                  <td class="px-5 py-4">
-                    <div
-                      class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
+                  <td>
+                    <div class="action-row">
                       <button
-                        *hasPermission="'write:employee'"
-                        class="text-xs bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 px-3 py-1.5 rounded-lg transition-colors"
+                        *hasPermission="'Employee:update'"
+                        class="btn-minimal edit"
                       >
                         Edit
                       </button>
                       <button
-                        *hasPermission="'delete:employee'"
-                        class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition-colors"
+                        *hasPermission="'Employee:delete'"
+                        class="btn-minimal delete"
                       >
                         Delete
                       </button>
@@ -104,8 +94,8 @@ interface Employee {
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="5" class="px-5 py-12 text-center text-slate-500 text-sm">
-                    No employees found matching your search.
+                  <td colspan="5">
+                    <div class="empty-state">No employees found matching your search.</div>
                   </td>
                 </tr>
               }
@@ -115,6 +105,7 @@ interface Employee {
       </div>
     </div>
   `,
+  styleUrls: ['./employees.component.scss']
 })
 export class EmployeesComponent {
   search = signal('');
@@ -181,11 +172,11 @@ export class EmployeesComponent {
     const q = this.search().toLowerCase();
     return q
       ? this.employees.filter(
-          (e) =>
-            e.name.toLowerCase().includes(q) ||
-            e.department.toLowerCase().includes(q) ||
-            e.position.toLowerCase().includes(q),
-        )
+        (e) =>
+          e.name.toLowerCase().includes(q) ||
+          e.department.toLowerCase().includes(q) ||
+          e.position.toLowerCase().includes(q),
+      )
       : this.employees;
   });
 

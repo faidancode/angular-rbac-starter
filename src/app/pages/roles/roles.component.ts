@@ -14,54 +14,51 @@ interface Role {
   standalone: true,
   imports: [HasPermissionDirective],
   template: `
-    <div class="space-y-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-2xl font-bold text-white">Role Management</h2>
-          <p class="text-slate-400 text-sm mt-1">Manage RBAC roles and their permissions</p>
+    <div class="roles-container">
+      <div class="roles-header">
+        <div class="header-content">
+          <h2>Role Management</h2>
+          <p>Manage RBAC roles and their permissions</p>
         </div>
         <button
-          *hasPermission="'write:role'"
-          class="bg-primary-600 hover:bg-primary-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl
-                 transition-all hover:-translate-y-0.5 shadow-lg shadow-primary-600/30"
+          *hasPermission="'Role:create'"
+          class="primary-button"
         >
-          + Create Role
+          <span>+ Create Role</span>
         </button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div class="roles-grid">
         @for (role of roles; track role.id) {
-          <div class="glass-card p-5 hover:-translate-y-1 transition-transform duration-200">
-            <div class="flex items-start justify-between mb-3">
-              <div>
-                <h3 class="font-semibold text-white">{{ role.name }}</h3>
-                <p class="text-xs text-slate-400 mt-0.5">{{ role.description }}</p>
+          <div class="role-card">
+            <div class="card-header">
+              <div class="role-info">
+                <h3>{{ role.name }}</h3>
+                <p class="role-desc">{{ role.description }}</p>
               </div>
-              <span
-                class="text-xs bg-primary-600/20 text-primary-400 px-2.5 py-1 rounded-full font-medium"
-              >
+              <span class="user-count-badge">
                 {{ role.userCount }} users
               </span>
             </div>
-            <div class="flex flex-wrap gap-1.5 mt-4">
+            
+            <div class="permissions-list">
               @for (perm of role.permissions; track perm) {
-                <span
-                  class="text-xs bg-white/5 border border-white/10 text-slate-300 px-2.5 py-1 rounded-lg font-mono"
-                >
+                <span class="permission-tag">
                   {{ perm }}
                 </span>
               }
             </div>
-            <div class="flex gap-2 mt-4 pt-4 border-t border-white/5">
+
+            <div class="card-footer">
               <button
-                *hasPermission="'write:role'"
-                class="flex-1 text-xs bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 py-2 rounded-lg transition-colors font-medium"
+                *hasPermission="'Role:update'"
+                class="btn-action edit"
               >
                 Edit Role
               </button>
               <button
-                *hasPermission="'delete:role'"
-                class="flex-1 text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 py-2 rounded-lg transition-colors font-medium"
+                *hasPermission="'Role:delete'"
+                class="btn-action delete"
               >
                 Delete
               </button>
@@ -71,6 +68,7 @@ interface Role {
       </div>
     </div>
   `,
+  styleUrls: ['./roles.component.scss']
 })
 export class RolesComponent {
   roles: Role[] = [

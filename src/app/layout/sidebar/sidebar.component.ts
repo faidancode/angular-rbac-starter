@@ -7,65 +7,63 @@ import {
   computed,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { LucideDynamicIcon, LucideCpu, LucideLayoutDashboard, LucideUsers, LucideKey, LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
+import { LucideCpu, LucideLayoutDashboard, LucideUsers, LucideKey, LucideChevronLeft, LucideChevronRight, LucideBuilding, LucideDynamicIcon } from '@lucide/angular';
 
 import { AbilityService } from '../../core/services/ability.service';
 import { NavItem } from './sidebar.types';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
-  imports: [RouterLink, RouterLinkActive, LucideDynamicIcon, LucideCpu, LucideLayoutDashboard, LucideUsers, LucideKey, LucideChevronLeft, LucideChevronRight],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    LucideDynamicIcon,
+    LucideCpu,
+    LucideLayoutDashboard,
+    LucideUsers,
+    LucideKey,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideBuilding
+  ],
   template: `
-    <aside
-      [class]="collapsed() ? 'w-20' : 'w-72'"
-      class="flex flex-col h-full bg-[#0f172a] transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) shrink-0 relative z-40 border-r border-white/5"
-    >
-      <!-- HEADER -->
-      <div class="h-20 flex items-center px-8 border-b border-white/5 mb-8">
-        <div class="flex items-center gap-4 overflow-hidden">
-          <div class="w-8 h-8 bg-[#e84e1b] flex items-center justify-center">
+    <aside [class.collapsed]="collapsed()" class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <div class="icon-square">
             <svg lucideCpu [size]="16" color="white"></svg>
           </div>
-
           @if (!collapsed()) {
-            <span class="font-black text-white tracking-[0.2em] text-xs uppercase italic">
-              HRIS_TERMINAL
-            </span>
+            <span class="brand-text">HRIS_TERMINAL</span>
           }
         </div>
       </div>
 
-      <!-- NAV -->
-      <nav class="flex-1 px-4 space-y-10 overflow-y-auto custom-scrollbar">
-        <div>
+      <nav class="sidebar-nav custom-scrollbar">
+        <div class="nav-section">
           @if (!collapsed()) {
-            <p class="px-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">
-              Core Systems
-            </p>
+            <p class="section-label">Core Systems</p>
           }
 
-          <div class="space-y-2">
+          <div class="nav-list">
             @for (item of visibleNavItems(); track item.route) {
               <a
                 [routerLink]="item.route"
                 routerLinkActive="active-link"
-                class="flex items-center gap-4 px-4 py-3 group transition-all duration-300 hover:bg-white/5 relative"
+                class="nav-item group"
               >
-                <div class="active-dot absolute left-0 w-1 h-0 bg-[#e84e1b] transition-all duration-300 opacity-0"></div>
+                <div class="active-indicator"></div>
 
-                <div class="text-xl text-slate-500 group-hover:text-white flex items-center">
+                <div class="nav-icon">
                   <svg [lucideIcon]="item.icon" [size]="20"></svg>
                 </div>
 
                 @if (!collapsed()) {
-                  <span class="text-sm font-bold text-slate-400 group-hover:text-white truncate">
-                    {{ item.label }}
-                  </span>
+                  <span class="nav-label">{{ item.label }}</span>
                 }
 
                 @if (collapsed()) {
-                  <div class="absolute left-16 bg-white px-3 py-2 text-[10px] text-[#0f172a] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 font-black uppercase tracking-widest z-50 shadow-2xl">
+                  <div class="nav-tooltip">
                     {{ item.label }}
                   </div>
                 }
@@ -75,43 +73,16 @@ import { NavItem } from './sidebar.types';
         </div>
       </nav>
 
-      <!-- FOOTER -->
-      <div class="p-6 border-t border-white/5 bg-[#0a0f1d] flex items-center justify-center">
+      <div class="sidebar-footer">
         @if (!collapsed()) {
-          <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
-            SYSTEM_ONLINE
-          </span>
+          <span class="status-text">SYSTEM_ONLINE</span>
         } @else {
-          <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+          <div class="status-pulse"></div>
         }
       </div>
     </aside>
   `,
-  styles: [
-    `
-      :host {
-        --primary: #0f172a;
-        --secondary: #e84e1b;
-      }
-
-      .active-link {
-        background: rgba(255, 255, 255, 0.05);
-      }
-
-      .active-link .active-dot {
-        height: 70%;
-        opacity: 1;
-      }
-
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 3px;
-      }
-
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-      }
-    `,
-  ],
+  styleUrls: ['./sidebar.component.scss'] // Atau masukkan ke blok styles di bawah
 })
 export class SidebarComponent {
   // --- state ---
@@ -133,6 +104,12 @@ export class SidebarComponent {
       route: '/employees',
       icon: LucideUsers,
       permission: 'Employee:read',
+    },
+    {
+      label: 'Departments',
+      route: '/departments',
+      icon: LucideBuilding,
+      permission: 'Department:read',
     },
     {
       label: 'Access Control',

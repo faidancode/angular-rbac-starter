@@ -1,0 +1,52 @@
+/* 1. Reset & Global Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('./assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 2. Import Modular Components */
+@import "./styles/abstract/variables";
+@import "./styles/components/table";
+
+/* 3. Global UI Utils (Ganti utility tailwind yang sering dipakai) */
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.space-y-8>*+* {
+  margin-top: 2rem;
+}
+
+/* Lucide Icon Standard */
+.lucide {
+  stroke-width: 1.5px;
+  display: inline-block;
+  vertical-align: middle;
+}

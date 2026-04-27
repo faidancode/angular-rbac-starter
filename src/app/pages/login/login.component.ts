@@ -19,74 +19,51 @@ import {
   standalone: true,
   imports: [FormsModule, LucideLayoutGrid, LucideZap, LucideCircleAlert, LucideMail, LucideLock, LucideArrowRight, LucideShieldCheck],
   template: `
-    <div class="min-h-screen bg-surface-50 flex flex-col md:flex-row font-sans">
-      <div
-        class="hidden md:flex md:w-1/2 bg-[#0f172a] relative p-16 flex-col justify-between overflow-hidden"
-      >
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-          <svg
-            lucideLayoutGrid
-            [size]="640"
-            color="white"
-            class="absolute -top-40 -left-40"
-          ></svg>
+    <div class="login-container">
+      <div class="login-sidebar">
+        <div class="grid-bg">
+          <svg lucideLayoutGrid [size]="640" color="white"></svg>
         </div>
 
-        <div class="relative z-10">
-          <div
-            class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20"
-          >
+        <div class="logo-wrapper">
+          <div class="logo-box">
             <svg lucideZap color="white" [size]="24"></svg>
           </div>
         </div>
 
-        <div class="relative z-10 max-w-md">
-          <h2 class="text-4xl font-bold text-white tracking-tight leading-tight mb-4">
-            Managing people, <br />
-            <span class="text-[#e84e1b]">with intentionality.</span>
-          </h2>
-          <p class="text-white/60 text-lg leading-relaxed font-light">
-            A premium workspace designed for the modern HR professional. Streamlined, secure, and
-            human-centric.
-          </p>
+        <div class="sidebar-content">
+          <h2>Managing people, <br /><span>with intentionality.</span></h2>
+          <p>A premium workspace designed for the modern HR professional. Streamlined, secure, and human-centric.</p>
         </div>
 
-        <div class="relative z-10 text-white/40 text-xs font-semibold uppercase tracking-widest">
-          © 2026 HRISCore Systems v2.1.0
-        </div>
+        <div class="sidebar-footer">© 2026 HRISCore Systems v2.1.0</div>
       </div>
 
-      <div class="flex-1 flex items-center justify-center p-8 bg-white">
-        <div class="w-full max-w-100">
-          <div class="md:hidden flex items-center justify-center mb-8">
-            <div class="w-10 h-10 rounded-xl bg-[#0f172a] flex items-center justify-center">
+      <div class="login-main">
+        <div class="login-card">
+          <div class="mobile-logo">
+            <div class="logo-box">
               <svg lucideZap color="white" [size]="20"></svg>
             </div>
           </div>
 
-          <header class="mb-10">
-            <h1 class="text-3xl font-bold text-surface-900 tracking-tight">Sign In</h1>
-            <p class="text-surface-500 mt-2 font-medium">
-              Enter your credentials to access the platform.
-            </p>
+          <header>
+            <h1>Sign In</h1>
+            <p>Enter your credentials to access the platform.</p>
           </header>
 
           @if (error()) {
-            <div
-              class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 flex items-center gap-3 animate-in fade-in slide-in-from-top-2"
-            >
+            <div class="error-alert">
               <svg lucideCircleAlert color="#ef4444" [size]="20"></svg>
-              <p class="text-red-700 text-sm font-semibold">{{ error() }}</p>
+              <p>{{ error() }}</p>
             </div>
           }
 
-          <form (submit)="onLogin(); $event.preventDefault()" class="space-y-6">
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold uppercase tracking-wider text-surface-400 ml-1"
-                >Email Address</label
-              >
-              <div class="relative">
-                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 flex items-center">
+          <form (submit)="onLogin(); $event.preventDefault()">
+            <div class="form-group">
+              <label>Email Address</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
                   <svg lucideMail [size]="20"></svg>
                 </div>
                 <input
@@ -94,25 +71,17 @@ import {
                   name="email"
                   type="email"
                   placeholder="name@company.com"
-                  class="w-full bg-surface-50 border border-surface-200 rounded-xl pl-12 pr-4 py-3.5 text-surface-900 placeholder-surface-400
-                         focus:outline-none focus:ring-2 focus:ring-[#0f172a]/10 focus:border-[#0f172a] transition-all text-sm font-medium"
                 />
               </div>
             </div>
 
-            <div class="space-y-1.5">
-              <div class="flex justify-between items-end px-1">
-                <label class="text-xs font-bold uppercase tracking-wider text-surface-400"
-                  >Password</label
-                >
-                <a
-                  href="#"
-                  class="text-xs font-bold text-[#0f172a] hover:text-[#e84e1b] transition-colors"
-                  >Forgot Password?</a
-                >
+            <div class="form-group">
+              <div class="label-row">
+                <label>Password</label>
+                <a href="#" class="forgot-link">Forgot Password?</a>
               </div>
-              <div class="relative">
-                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 flex items-center">
+              <div class="input-wrapper">
+                <div class="input-icon">
                   <svg lucideLock [size]="20"></svg>
                 </div>
                 <input
@@ -120,34 +89,14 @@ import {
                   name="password"
                   type="password"
                   placeholder="••••••••"
-                  class="w-full bg-surface-50 border border-surface-200 rounded-xl pl-12 pr-4 py-3.5 text-surface-900 placeholder-surface-400
-                         focus:outline-none focus:ring-2 focus:ring-[#0f172a]/10 focus:border-[#0f172a] transition-all text-sm font-medium"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              [disabled]="loading()"
-              class="w-full bg-[#0f172a] hover:bg-[#1e293b] disabled:opacity-70 disabled:cursor-not-allowed
-                     text-white font-bold py-4 rounded-xl transition-all duration-300
-                     shadow-xl shadow-[#0f172a]/20 hover:shadow-[#0f172a]/30 flex items-center justify-center gap-3 mt-4"
-            >
+            <button type="submit" class="submit-btn" [disabled]="loading()">
               @if (loading()) {
-                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
                 </svg>
                 <span>Processing...</span>
               } @else {
@@ -157,24 +106,21 @@ import {
             </button>
           </form>
 
-          <footer class="mt-12 pt-8 border-t border-surface-100 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-surface-400">
+          <footer>
+            <div class="secure-badge">
               <svg lucideShieldCheck [size]="18"></svg>
-              <span class="text-[10px] font-bold uppercase tracking-widest">Secure SSO</span>
+              <span>Secure SSO</span>
             </div>
-            <div class="flex gap-4">
-              <span
-                class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-              ></span>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-surface-400"
-                >Systems Active</span
-              >
+            <div class="status-indicator">
+              <div class="dot"></div>
+              <span>Systems Active</span>
             </div>
           </footer>
         </div>
       </div>
     </div>
   `,
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   email = '';

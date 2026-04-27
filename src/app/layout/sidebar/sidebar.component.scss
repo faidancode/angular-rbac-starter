@@ -1,0 +1,216 @@
+// Variables khusus Sidebar (Scoped)
+$sidebar-bg: #0f172a;
+$sidebar-accent: #e84e1b;
+$sidebar-border: rgba(255, 255, 255, 0.05);
+$text-muted: #94a3b8; // slate-400
+$transition-speed: 500ms;
+$ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: $sidebar-bg;
+    border-right: 1px solid $sidebar-border;
+    transition: width $transition-speed $ease;
+    position: relative;
+    z-index: 40;
+    flex-shrink: 0;
+    width: 18rem; // Default w-72
+
+    &.collapsed {
+        width: 5rem; // w-20
+    }
+}
+
+.sidebar-header {
+    height: 5rem; // h-20
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    border-bottom: 1px solid $sidebar-border;
+    margin-bottom: 2rem;
+
+    .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        overflow: hidden;
+
+        .icon-square {
+            width: 2rem;
+            height: 2rem;
+            background-color: $sidebar-accent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            font-weight: 900;
+            color: white;
+            letter-spacing: 0.2em;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-style: italic;
+            white-space: nowrap;
+        }
+    }
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 0 1rem;
+    overflow-y: auto;
+
+    .section-label {
+        padding: 0 1rem;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #64748b; // slate-500
+        margin-bottom: 1.5rem;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    position: relative;
+    text-decoration: none;
+    transition: background 300ms ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+
+        .nav-icon,
+        .nav-label {
+            color: white;
+        }
+
+        .nav-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .nav-icon {
+        font-size: 1.25rem;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        transition: color 300ms ease;
+    }
+
+    .nav-label {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: $text-muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 300ms ease;
+    }
+
+    /* Active State Indicator */
+    .active-indicator {
+        position: absolute;
+        left: 0;
+        width: 3px;
+        height: 0;
+        background-color: $sidebar-accent;
+        transition: all 300ms ease;
+        opacity: 0;
+    }
+
+    &.active-link {
+        background: rgba(255, 255, 255, 0.05);
+
+        .active-indicator {
+            height: 70%;
+            opacity: 1;
+        }
+
+        .nav-icon,
+        .nav-label {
+            color: white;
+        }
+    }
+}
+
+.nav-tooltip {
+    position: absolute;
+    left: 4rem;
+    background-color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 10px;
+    color: $sidebar-bg;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(0.5rem);
+    transition: all 300ms ease;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    z-index: 50;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid $sidebar-border;
+    background-color: #0a0f1d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .status-text {
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #64748b;
+    }
+
+    .status-pulse {
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 9999px;
+        background-color: #10b981; // emerald-500
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+}
+
+// Custom Scrollbar
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}

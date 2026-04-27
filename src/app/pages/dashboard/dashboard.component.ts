@@ -32,15 +32,13 @@ interface StatCard {
     LucidePlus,
   ],
   template: `
-    <div class="space-y-10 animate-in fade-in duration-700">
-      <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h2 class="text-3xl font-bold text-primary tracking-tight">Dashboard Overview</h2>
-          <p class="text-text-muted font-medium mt-1">
-            Real-time insights across your global workforce.
-          </p>
+    <div class="dashboard-container animate-in">
+      <header class="dashboard-header">
+        <div class="header-content">
+          <h2>Dashboard Overview</h2>
+          <p>Real-time insights across your global workforce.</p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="header-actions">
           <button class="secondary-button">
             <svg lucideDownload [size]="18"></svg>
             <span>Export Report</span>
@@ -52,65 +50,45 @@ interface StatCard {
         </div>
       </header>
 
-      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+      <section class="stats-grid">
         @for (card of stats; track card.label) {
-          <div
-            class="bg-white p-6 rounded-2xl border border-subtle shadow-sm hover:shadow-md transition-all group"
-          >
-            <div class="flex justify-between items-start mb-4">
-              <div
-                [class]="
-                  'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110 ' +
-                  card.color
-                "
-              >
+          <div class="stat-card">
+            <div class="card-header">
+              <div class="icon-box" [class]="card.color">
                 <svg [lucideIcon]="card.icon" [size]="24"></svg>
               </div>
-              <span
-                [class]="
-                  'text-xs font-bold px-2.5 py-1 rounded-lg ' +
-                  (card.positive ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600')
-                "
-              >
+              <span class="change-badge" [class.positive]="card.positive" [class.negative]="!card.positive">
                 {{ card.change }}
               </span>
             </div>
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-                {{ card.label }}
-              </p>
-              <p class="text-3xl font-bold text-primary mt-1 tracking-tight">{{ card.value }}</p>
+            <div class="card-body">
+              <p class="card-label">{{ card.label }}</p>
+              <p class="card-value">{{ card.value }}</p>
             </div>
           </div>
         }
       </section>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-7 bg-white rounded-2xl border border-subtle p-8">
-          <div class="flex items-center justify-between mb-8">
-            <h3 class="text-lg font-bold text-primary tracking-tight">Workforce Distribution</h3>
-            <button
-              class="text-xs font-bold text-secondary uppercase tracking-widest hover:underline"
-            >
-              View Analytics
-            </button>
+      <div class="dashboard-layout">
+        <div class="main-chart-area">
+          <div class="section-header">
+            <h3>Workforce Distribution</h3>
+            <a href="#" class="view-link">View Analytics</a>
           </div>
 
-          <div class="space-y-6">
+          <div class="distribution-list">
             @for (dept of departments; track dept.name) {
-              <div class="group">
-                <div class="flex justify-between items-end text-sm mb-2">
-                  <div class="flex flex-col">
-                    <span class="text-xs font-bold text-text-muted uppercase tracking-tighter"
-                      >{{ dept.count }} Employees</span
-                    >
-                    <span class="font-bold text-primary">{{ dept.name }}</span>
+              <div class="distribution-item">
+                <div class="item-info">
+                  <div class="label-group">
+                    <span class="count">{{ dept.count }} Employees</span>
+                    <span class="name">{{ dept.name }}</span>
                   </div>
-                  <span class="text-sm font-black text-primary">{{ dept.pct }}%</span>
+                  <span class="percentage">{{ dept.pct }}%</span>
                 </div>
-                <div class="h-1.5 bg-surface-50 rounded-full overflow-hidden">
+                <div class="progress-bar">
                   <div
-                    class="h-full rounded-full transition-all duration-1000 ease-out"
+                    class="progress-fill"
                     [class]="dept.color"
                     [style.width]="dept.pct + '%'"
                   ></div>
@@ -120,36 +98,27 @@ interface StatCard {
           </div>
         </div>
 
-        <div class="lg:col-span-5 bg-white rounded-2xl border border-subtle p-8 flex flex-col">
-          <h3 class="text-lg font-bold text-primary tracking-tight mb-8">System Activity</h3>
+        <div class="activity-feed">
+          <h3>System Activity</h3>
 
-          <div class="space-y-8 flex-1">
+          <div class="feed-container">
             @for (activity of activities; track activity.id) {
-              <div class="flex gap-4 relative group">
+              <div class="activity-item">
                 @if (!$last) {
-                  <div class="absolute left-5 top-10 bottom-[-20px] w-px bg-subtle"></div>
+                  <div class="line"></div>
                 }
 
-                <div
-                  class="w-10 h-10 rounded-xl bg-surface-50 flex items-center justify-center shrink-0 z-10 border border-subtle group-hover:border-primary transition-colors"
-                >
-                  <svg [lucideIcon]="activity.icon" [size]="18" class="text-primary"></svg>
+                <div class="icon-circle">
+                  <svg [lucideIcon]="activity.icon" [size]="18"></svg>
                 </div>
 
-                <div class="flex-1 pt-1">
-                  <div class="flex justify-between items-start">
-                    <p class="text-sm font-bold text-primary leading-tight">{{ activity.title }}</p>
-                    <span class="text-[10px] font-bold text-text-muted uppercase shrink-0 ml-2">{{
-                      activity.time
-                    }}</span>
+                <div class="item-content">
+                  <div class="content-header">
+                    <p>{{ activity.title }}</p>
+                    <span class="time">{{ activity.time }}</span>
                   </div>
-                  <div class="mt-2">
-                    <span
-                      [class]="
-                        'text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ' +
-                        activity.badgeClass
-                      "
-                    >
+                  <div class="badge-row">
+                    <span class="activity-badge" [class]="activity.badgeClass">
                       {{ activity.badge }}
                     </span>
                   </div>
@@ -158,29 +127,12 @@ interface StatCard {
             }
           </div>
 
-          <button
-            class="w-full mt-8 py-3 rounded-xl border border-subtle text-xs font-bold text-text-muted hover:bg-surface-50 transition-all uppercase tracking-widest"
-          >
-            Load Full Audit Log
-          </button>
+          <button class="load-more-btn">Load Full Audit Log</button>
         </div>
       </div>
     </div>
   `,
-  styles: [
-    `
-      @reference "../../../styles.css";
-
-      .primary-button {
-        @apply bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 
-             hover:bg-primary-light transition-all shadow-lg shadow-primary/10 active:scale-95;
-      }
-      .secondary-button {
-        @apply bg-white text-primary border border-subtle px-5 py-2.5 rounded-xl text-sm font-bold 
-             flex items-center gap-2 hover:bg-surface-50 transition-all active:scale-95;
-      }
-    `,
-  ],
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
   stats = [
