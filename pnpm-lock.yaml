@@ -26,6 +26,15 @@ importers:
       '@angular/router':
         specifier: ^21.2.0
         version: 21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(@angular/platform-browser@21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@hugeicons/angular':
+        specifier: ^1.0.7
+        version: 1.0.7(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))
+      '@hugeicons/core-free-icons':
+        specifier: ^4.1.1
+        version: 4.1.1
+      '@lucide/angular':
+        specifier: ^1.11.0
+        version: 1.11.0(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))
       '@tailwindcss/postcss':
         specifier: ^4.2.4
         version: 4.2.4
@@ -588,6 +597,15 @@ packages:
     peerDependencies:
       hono: ^4
 
+  '@hugeicons/angular@1.0.7':
+    resolution: {integrity: sha512-E7TozEjif3CQUz23jrUQBthz2Ky7liW2WfJI9XkY3AZNXkBVQQVZwKPcDtmaqJsUS0ctqFl4V/+KHY8eWGzRXw==}
+    peerDependencies:
+      '@angular/common': '>=17.1.0 <21.0.0'
+      '@angular/core': '>=17.1.0 <21.0.0'
+
+  '@hugeicons/core-free-icons@4.1.1':
+    resolution: {integrity: sha512-teqIBvPHl90ygIwKyJwTxOH8aNp1X1PjDTcMvLkEwdPxPD+8mssrZ5kXKIAJJFYPsz69a8LYQY0UPid4PAdavg==}
+
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
     engines: {node: '>=18'}
@@ -787,6 +805,12 @@ packages:
     resolution: {integrity: sha512-qwosvPyl+zpUlp3gRb7UcJ3H8S28XHCzkv0Y0EgQToXjQP91ZD67EHSCDmaLjtKhe+GVIW5om1KUpzVLA0l6pg==}
     cpu: [x64]
     os: [win32]
+
+  '@lucide/angular@1.11.0':
+    resolution: {integrity: sha512-vfPJGCIuVkLMe7FjY151aigv4etnsE45pWdL4m2PcrNdtx6yq2mhIUgUBhGtYgRavODGorpPGdG9v37r0fRpCQ==}
+    peerDependencies:
+      '@angular/common': 17.x - 21.x
+      '@angular/core': 17.x - 21.x
 
   '@modelcontextprotocol/sdk@1.26.0':
     resolution: {integrity: sha512-Y5RmPncpiDtTXDbLKswIJzTqu2hyBKxTNsgKqKclDbhIgg1wgtf1fRuvxgTnRfcnxtvvgbIEcqUOzZrJ6iSReg==}
@@ -3406,6 +3430,14 @@ snapshots:
     dependencies:
       hono: 4.12.15
 
+  '@hugeicons/angular@1.0.7(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)
+      tslib: 2.8.1
+
+  '@hugeicons/core-free-icons@4.1.1': {}
+
   '@inquirer/ansi@1.0.2': {}
 
   '@inquirer/checkbox@4.3.2':
@@ -3556,6 +3588,12 @@ snapshots:
 
   '@lmdb/lmdb-win32-x64@3.5.1':
     optional: true
+
+  '@lucide/angular@1.11.0(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)
+      tslib: 2.8.1
 
   '@modelcontextprotocol/sdk@1.26.0(zod@4.3.6)':
     dependencies:

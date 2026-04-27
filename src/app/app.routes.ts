@@ -20,14 +20,14 @@ export const routes: Routes = [
 
       {
         path: 'employees',
-        canActivate: [permissionGuard('read:employee')],
+        canActivate: [permissionGuard('Employee:read')],
         loadComponent: () =>
           import('./pages/employees/employees.component').then((m) => m.EmployeesComponent),
       },
 
       {
         path: 'roles',
-        canActivate: [permissionGuard('read:role')],
+        canActivate: [permissionGuard('Role:read')],
         loadComponent: () => import('./pages/roles/roles.component').then((m) => m.RolesComponent),
       },
 

@@ -1,66 +1,116 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import {
+  LucideCalendarCheck,
+  LucideCircleCheck,
+  LucideDownload,
+  LucideDynamicIcon,
+  LucidePencil,
+  LucidePlane,
+  LucidePlus,
+  LucideShieldCheck,
+  LucideUserPlus,
+  LucideUsers,
+} from '@lucide/angular';
 
 interface StatCard {
   label: string;
   value: string;
   change: string;
   positive: boolean;
-  icon: string;
+  icon: any;
   color: string;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [
+    CommonModule,
+    LucideDynamicIcon,
+    LucideDownload,
+    LucidePlus,
+  ],
   template: `
-    <div class="space-y-6">
-      <div>
-        <h2 class="text-2xl font-bold text-white">Dashboard Overview</h2>
-        <p class="text-slate-400 text-sm mt-1">Welcome back — here's what's happening today.</p>
-      </div>
+    <div class="space-y-10 animate-in fade-in duration-700">
+      <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-primary tracking-tight">Dashboard Overview</h2>
+          <p class="text-text-muted font-medium mt-1">
+            Real-time insights across your global workforce.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="secondary-button">
+            <svg lucideDownload [size]="18"></svg>
+            <span>Export Report</span>
+          </button>
+          <button class="primary-button">
+            <svg lucidePlus [size]="18"></svg>
+            <span>Add Employee</span>
+          </button>
+        </div>
+      </header>
 
-      <!-- Stat Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         @for (card of stats; track card.label) {
           <div
-            class="glass-card p-5 flex items-start gap-4 hover:-translate-y-1 transition-transform duration-200"
+            class="bg-white p-6 rounded-2xl border border-subtle shadow-sm hover:shadow-md transition-all group"
           >
-            <div
-              [class]="
-                'w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 ' +
-                card.color
-              "
-            >
-              {{ card.icon }}
+            <div class="flex justify-between items-start mb-4">
+              <div
+                [class]="
+                  'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110 ' +
+                  card.color
+                "
+              >
+                <svg [lucideIcon]="card.icon" [size]="24"></svg>
+              </div>
+              <span
+                [class]="
+                  'text-xs font-bold px-2.5 py-1 rounded-lg ' +
+                  (card.positive ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600')
+                "
+              >
+                {{ card.change }}
+              </span>
             </div>
-            <div class="min-w-0">
-              <p class="text-slate-400 text-xs font-medium uppercase tracking-wider truncate">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                 {{ card.label }}
               </p>
-              <p class="text-2xl font-bold text-white mt-0.5">{{ card.value }}</p>
-              <p [class]="'text-xs mt-1 ' + (card.positive ? 'text-emerald-400' : 'text-red-400')">
-                {{ card.change }}
-              </p>
+              <p class="text-3xl font-bold text-primary mt-1 tracking-tight">{{ card.value }}</p>
             </div>
           </div>
         }
-      </div>
+      </section>
 
-      <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Department Distribution -->
-        <div class="glass-card p-6">
-          <h3 class="font-semibold text-white mb-4">Department Distribution</h3>
-          <div class="space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-subtle p-8">
+          <div class="flex items-center justify-between mb-8">
+            <h3 class="text-lg font-bold text-primary tracking-tight">Workforce Distribution</h3>
+            <button
+              class="text-xs font-bold text-secondary uppercase tracking-widest hover:underline"
+            >
+              View Analytics
+            </button>
+          </div>
+
+          <div class="space-y-6">
             @for (dept of departments; track dept.name) {
-              <div>
-                <div class="flex justify-between text-sm mb-1.5">
-                  <span class="text-slate-300">{{ dept.name }}</span>
-                  <span class="text-slate-400 font-medium">{{ dept.count }} · {{ dept.pct }}%</span>
+              <div class="group">
+                <div class="flex justify-between items-end text-sm mb-2">
+                  <div class="flex flex-col">
+                    <span class="text-xs font-bold text-text-muted uppercase tracking-tighter"
+                      >{{ dept.count }} Employees</span
+                    >
+                    <span class="font-bold text-primary">{{ dept.name }}</span>
+                  </div>
+                  <span class="text-sm font-black text-primary">{{ dept.pct }}%</span>
                 </div>
-                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                <div class="h-1.5 bg-surface-50 rounded-full overflow-hidden">
                   <div
-                    class="h-full rounded-full transition-all duration-700"
+                    class="h-full rounded-full transition-all duration-1000 ease-out"
                     [class]="dept.color"
                     [style.width]="dept.pct + '%'"
                   ></div>
@@ -68,117 +118,156 @@ interface StatCard {
               </div>
             }
           </div>
-          <p class="text-xs text-slate-500 mt-4 italic">
-            💡 Connect ApexCharts or Chart.js for interactive charts
-          </p>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="glass-card p-6">
-          <h3 class="font-semibold text-white mb-4">Recent Activity</h3>
-          <div class="space-y-3">
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-subtle p-8 flex flex-col">
+          <h3 class="text-lg font-bold text-primary tracking-tight mb-8">System Activity</h3>
+
+          <div class="space-y-8 flex-1">
             @for (activity of activities; track activity.id) {
-              <div class="flex items-start gap-3 py-2 border-b border-white/5 last:border-0">
+              <div class="flex gap-4 relative group">
+                @if (!$last) {
+                  <div class="absolute left-5 top-10 bottom-[-20px] w-px bg-subtle"></div>
+                }
+
                 <div
-                  class="w-8 h-8 rounded-full bg-primary-600/30 flex items-center justify-center text-sm shrink-0"
+                  class="w-10 h-10 rounded-xl bg-surface-50 flex items-center justify-center shrink-0 z-10 border border-subtle group-hover:border-primary transition-colors"
                 >
-                  {{ activity.icon }}
+                  <svg [lucideIcon]="activity.icon" [size]="18" class="text-primary"></svg>
                 </div>
-                <div class="min-w-0">
-                  <p class="text-sm text-white font-medium truncate">{{ activity.title }}</p>
-                  <p class="text-xs text-slate-500">{{ activity.time }}</p>
+
+                <div class="flex-1 pt-1">
+                  <div class="flex justify-between items-start">
+                    <p class="text-sm font-bold text-primary leading-tight">{{ activity.title }}</p>
+                    <span class="text-[10px] font-bold text-text-muted uppercase shrink-0 ml-2">{{
+                      activity.time
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      [class]="
+                        'text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ' +
+                        activity.badgeClass
+                      "
+                    >
+                      {{ activity.badge }}
+                    </span>
+                  </div>
                 </div>
-                <span
-                  [class]="
-                    'ml-auto text-xs px-2 py-0.5 rounded-full shrink-0 ' + activity.badgeClass
-                  "
-                >
-                  {{ activity.badge }}
-                </span>
               </div>
             }
           </div>
+
+          <button
+            class="w-full mt-8 py-3 rounded-xl border border-subtle text-xs font-bold text-text-muted hover:bg-surface-50 transition-all uppercase tracking-widest"
+          >
+            Load Full Audit Log
+          </button>
         </div>
       </div>
     </div>
   `,
+  styles: [
+    `
+      @reference "../../../styles.css";
+
+      .primary-button {
+        @apply bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 
+             hover:bg-primary-light transition-all shadow-lg shadow-primary/10 active:scale-95;
+      }
+      .secondary-button {
+        @apply bg-white text-primary border border-subtle px-5 py-2.5 rounded-xl text-sm font-bold 
+             flex items-center gap-2 hover:bg-surface-50 transition-all active:scale-95;
+      }
+    `,
+  ],
 })
 export class DashboardComponent {
-  stats: StatCard[] = [
+  stats = [
     {
       label: 'Total Employees',
       value: '1,284',
-      change: '+12 this month',
+      change: '+12%',
       positive: true,
-      icon: '👥',
-      color: 'bg-primary-600/20 text-primary-400',
+      icon: LucideUsers,
+      color: 'bg-indigo-50 text-indigo-600',
     },
     {
       label: 'Active Status',
       value: '1,201',
-      change: '93.5% active',
+      change: '93.5%',
       positive: true,
-      icon: '✅',
-      color: 'bg-emerald-500/20 text-emerald-400',
+      icon: LucideCircleCheck,
+      color: 'bg-emerald-50 text-emerald-600',
     },
     {
       label: 'New Hires',
       value: '47',
-      change: '+8 vs last month',
+      change: '+8%',
       positive: true,
-      icon: '🆕',
-      color: 'bg-sky-500/20 text-sky-400',
+      icon: LucideUserPlus,
+      color: 'bg-sky-50 text-sky-600',
     },
     {
       label: 'On Leave',
       value: '83',
-      change: '6.5% workforce',
+      change: '-2%',
       positive: false,
-      icon: '🏖️',
-      color: 'bg-amber-500/20 text-amber-400',
+      icon: LucidePlane,
+      color: 'bg-amber-50 text-amber-600',
     },
   ];
 
   departments = [
-    { name: 'Engineering', count: 312, pct: 24, color: 'bg-primary-500' },
-    { name: 'Sales', count: 256, pct: 20, color: 'bg-emerald-500' },
-    { name: 'Operations', count: 198, pct: 15, color: 'bg-sky-500' },
-    { name: 'HR & Finance', count: 154, pct: 12, color: 'bg-violet-500' },
-    { name: 'Marketing', count: 128, pct: 10, color: 'bg-amber-500' },
+    { name: 'Engineering', count: 312, pct: 24, color: 'bg-primary' },
+    { name: 'Sales', count: 256, pct: 20, color: 'bg-secondary' },
+    { name: 'Operations', count: 198, pct: 15, color: 'bg-indigo-400' },
+    { name: 'HR & Finance', count: 154, pct: 12, color: 'bg-emerald-400' },
+    { name: 'Marketing', count: 128, pct: 10, color: 'bg-amber-400' },
   ];
 
   activities = [
     {
       id: 1,
-      icon: '👤',
+      icon: LucideUserPlus,
       title: 'John Doe joined Engineering',
-      time: '2 mins ago',
+      time: '2m ago',
       badge: 'New Hire',
-      badgeClass: 'bg-emerald-500/20 text-emerald-400',
+      badgeClass: 'border-emerald-100 text-emerald-600 bg-emerald-50',
     },
     {
       id: 2,
-      icon: '✏️',
+      icon: LucidePencil,
       title: 'Sarah K. profile updated',
-      time: '1 hr ago',
+      time: '1h ago',
       badge: 'Updated',
-      badgeClass: 'bg-sky-500/20 text-sky-400',
+      badgeClass: 'border-sky-100 text-sky-600 bg-sky-50',
     },
     {
       id: 3,
-      icon: '🔐',
+      icon: LucideShieldCheck,
       title: 'Role "Manager" permissions changed',
-      time: '3 hrs ago',
+      time: '3h ago',
       badge: 'RBAC',
-      badgeClass: 'bg-amber-500/20 text-amber-400',
+      badgeClass: 'border-amber-100 text-amber-600 bg-amber-50',
     },
     {
       id: 4,
-      icon: '🏖️',
+      icon: LucideCalendarCheck,
       title: 'Michael T. leave approved',
-      time: '5 hrs ago',
+      time: '5h ago',
       badge: 'Leave',
-      badgeClass: 'bg-violet-500/20 text-violet-400',
+      badgeClass: 'border-indigo-100 text-indigo-600 bg-indigo-50',
     },
   ];
+
+  protected readonly LucideCalendarCheck = LucideCalendarCheck;
+  protected readonly LucideCircleCheck = LucideCircleCheck;
+  protected readonly LucideDownload = LucideDownload;
+  protected readonly LucidePlane = LucidePlane;
+  protected readonly LucidePencil = LucidePencil;
+  protected readonly LucidePlus = LucidePlus;
+  protected readonly LucideShieldCheck = LucideShieldCheck;
+  protected readonly LucideUserPlus = LucideUserPlus;
+  protected readonly LucideUsers = LucideUsers;
 }
