@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { AbilityService } from '../../core/services/ability.service';
 
 interface NavItem {
   label: string;
@@ -78,14 +79,28 @@ export class SidebarComponent {
   @Input() collapsed = false;
   @Output() toggleCollapse = new EventEmitter<void>();
 
-  private auth = inject(AuthService);
+  private ability = inject(AbilityService);
 
   navItems: NavItem[] = [
     { label: 'Dashboard', icon: '📊', route: '/dashboard' },
-    { label: 'Employees', icon: '👥', route: '/employees', permission: 'read:employee' },
-    { label: 'Role Mgmt', icon: '🔐', route: '/roles', permission: 'read:role' },
+    { label: 'Employees', icon: '👥', route: '/employees', permission: 'employee.read' },
+    { label: 'Role Mgmt', icon: '🔐', route: '/roles', permission: 'role.read' },
   ];
 
+  // --- helper ---
+  private parsePermission(value: string) {
+    const [subject, action] = value.split('.');
+    return { action, subject };
+  }
+
   visibleNavItems = () =>
-    this.navItems.filter((item) => !item.permission || this.auth.hasPermission(item.permission));
+    this.navItems.filter((item) => {
+      if (!item.permission) return true;
+
+      if (!this.ability.permissionsLoaded()) return false;
+
+      const { action, subject } = this.parsePermission(item.permission);
+
+      return this.ability.can(action, subject);
+    });
 }

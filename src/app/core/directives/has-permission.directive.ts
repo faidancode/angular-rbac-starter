@@ -7,27 +7,64 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AbilityService } from '../services/ability.service';
 
-@Directive({ selector: '[hasPermission]', standalone: true })
+// --- helper parser ---
+function parsePermission(value: string): { action: string; subject: string } {
+  const [subject, action] = value.split('.');
+  return { action, subject };
+}
+
+type PermissionInput =
+  | string
+  | string[]
+  | { action: string; subject: string }
+  | { action: string; subject: string }[];
+
+@Directive({
+  selector: '[hasPermission]',
+  standalone: true,
+})
 export class HasPermissionDirective {
   private tpl = inject(TemplateRef<any>);
   private vcr = inject(ViewContainerRef);
-  private auth = inject(AuthService);
+  private ability = inject(AbilityService);
 
-  private _permission = signal<string>('');
+  private _permission = signal<PermissionInput>('');
 
   constructor() {
-    // Re-evaluate whenever permissions signal changes
     effect(() => {
       this.vcr.clear();
-      if (this.auth.hasPermission(this._permission())) {
+
+      if (!this.ability.permissionsLoaded()) return;
+
+      const perm = this._permission();
+
+      let allowed = false;
+
+      if (typeof perm === 'string') {
+        const p = parsePermission(perm);
+        allowed = this.ability.can(p.action, p.subject);
+      } else if (Array.isArray(perm)) {
+        allowed = perm.some((item) => {
+          if (typeof item === 'string') {
+            const p = parsePermission(item);
+            return this.ability.can(p.action, p.subject);
+          }
+          return this.ability.can(item.action, item.subject);
+        });
+      } else {
+        allowed = this.ability.can(perm.action, perm.subject);
+      }
+
+      if (allowed) {
         this.vcr.createEmbeddedView(this.tpl);
       }
     });
   }
 
-  @Input() set hasPermission(perm: string) {
-    this._permission.set(perm);
+  @Input()
+  set hasPermission(value: PermissionInput) {
+    this._permission.set(value);
   }
 }

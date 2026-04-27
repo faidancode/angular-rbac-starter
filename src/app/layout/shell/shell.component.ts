@@ -28,7 +28,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
             <div class="hidden sm:block">
               <p class="text-sm font-medium text-white/90">{{ user()?.name }}</p>
-              <p class="text-xs text-slate-400">{{ user()?.role }}</p>
+              <p class="text-xs text-slate-400">{{ user()?.roleName }}</p>
             </div>
             <button
               (click)="auth.logout()"

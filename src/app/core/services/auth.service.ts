@@ -1,79 +1,107 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
+import { AbilityService } from './ability.service';
 
+// --- Types ---
 export interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: string;
+  roleName: string;
   avatar?: string;
 }
 
-interface LoginResponse {
-  token: string;
-  user: AuthUser;
+interface LoginApiResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: AuthUser;
+    permissions: {
+      action: string;
+      subject: string;
+    }[];
+  };
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // --- Private Signals ---
   private readonly _token = signal<string | null>(localStorage.getItem('hris_token'));
+
   private readonly _user = signal<AuthUser | null>(this._loadUser());
-  private readonly _perms = signal<string[]>(this._loadPerms());
 
   // --- Public Computed ---
   readonly isAuthenticated = computed(() => !!this._token());
   readonly currentUser = computed(() => this._user());
-  readonly permissions = computed(() => this._perms());
 
   constructor(
     private http: HttpClient,
     private router: Router,
+    private abilityService: AbilityService,
   ) {}
 
-  login(email: string, password: string) {
+  // --- Login ---
+  login(email: string, password: string): Observable<void> {
     return this.http
-      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, password })
+      .post<LoginApiResponse>(`${environment.apiUrl}/auth/login`, {
+        email,
+        password,
+      })
       .pipe(
         tap((res) => {
-          const decoded = this._decodeJwt(res.token);
-          const perms: string[] = decoded?.permissions ?? [];
+          const data = res.data;
 
-          localStorage.setItem('hris_token', res.token);
-          localStorage.setItem('hris_user', JSON.stringify(res.user));
-          localStorage.setItem('hris_perms', JSON.stringify(perms));
+          // --- persist ---
+          localStorage.setItem('hris_token', data.accessToken);
+          localStorage.setItem('hris_user', JSON.stringify(data.user));
 
-          this._token.set(res.token);
-          this._user.set(res.user);
-          this._perms.set(perms);
+          // --- update state ---
+          this._token.set(data.accessToken);
+          this._user.set(data.user);
+
+          // --- set permissions (🔥 no decode JWT) ---
+          this.abilityService.setPermissions(
+            (data.permissions ?? []).map((p) => ({
+              action: p.action,
+              subject: p.subject,
+            })),
+          );
         }),
+        tap(() => {
+          this.router.navigate(['/dashboard']);
+        }),
+        map(() => void 0),
       );
   }
 
-  logout() {
-    ['hris_token', 'hris_user', 'hris_perms'].forEach((k) => localStorage.removeItem(k));
+  // --- Logout ---
+  logout(): void {
+    ['hris_token', 'hris_user'].forEach((k) => localStorage.removeItem(k));
+
     this._token.set(null);
     this._user.set(null);
-    this._perms.set([]);
+
+    // 🔥 clear ability
+    this.abilityService.clearPermissions();
+
     this.router.navigate(['/login']);
   }
 
-  hasPermission(permission: string): boolean {
-    return this._perms().includes(permission);
-  }
-
+  // --- Token accessor ---
   getToken(): string | null {
     return this._token();
   }
 
-  private _decodeJwt(token: string): any {
-    try {
-      return JSON.parse(atob(token.split('.')[1]));
-    } catch {
-      return null;
+  // --- Init helper (optional, for refresh case) ---
+  hydrate(): void {
+    const user = this._loadUser();
+    if (user) {
+      this._user.set(user);
     }
   }
 
@@ -82,14 +110,6 @@ export class AuthService {
       return JSON.parse(localStorage.getItem('hris_user') ?? 'null');
     } catch {
       return null;
-    }
-  }
-
-  private _loadPerms(): string[] {
-    try {
-      return JSON.parse(localStorage.getItem('hris_perms') ?? '[]');
-    } catch {
-      return [];
     }
   }
 }
