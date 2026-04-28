@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Department } from '../../core/types/api.types';
 import { DepartmentService } from '../../core/services/department.service';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-department-form',
@@ -18,6 +19,8 @@ import { DepartmentService } from '../../core/services/department.service';
 export class DepartmentFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private departmentService = inject(DepartmentService);
+  private toast = inject(ToastService);
+
 
   @Input() department: Department | null = null;
 
@@ -83,9 +86,11 @@ export class DepartmentFormComponent implements OnInit {
       next: () => {
         this.loading.set(false);
         this.success.emit(true);
+        this.toast.success('Berhasil disimpan');
       },
       error: (err) => {
         this.loading.set(false);
+        this.toast.error('Gagal disimpan');
 
         if (err.statusCode === 409) {
           this.departmentForm.get('name')?.setErrors({ conflict: true });

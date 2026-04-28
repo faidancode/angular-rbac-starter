@@ -15,6 +15,7 @@ import { ConfirmService } from '../../core/services/confirm.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { ModalService } from '../../core/services/modal.service';
 import { DepartmentFormComponent } from './department-form.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-department',
@@ -39,6 +40,8 @@ export class DepartmentComponent implements OnInit {
 
   private confirm = inject(ConfirmService);
   private modal = inject(ModalService);
+  private toast = inject(ToastService);
+
 
   // --- Icons ---
   protected readonly LucideSearch = LucideSearch;
@@ -112,9 +115,12 @@ export class DepartmentComponent implements OnInit {
     });
 
     if (ok) {
+      this.toast.success('Berhasil dihapus');
       this.service.remove(id).subscribe({
         next: () => this.fetchData()
       });
+    } else {
+      this.toast.error('Gagal dihapus');
     }
   }
 }
