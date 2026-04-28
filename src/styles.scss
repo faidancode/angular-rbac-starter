@@ -2,25 +2,28 @@
 
 /* 1. Reset & Global Base */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @font-face {
-    font-family: 'Plus Jakarta Sans';
-    src: url('./assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
-    font-weight: 100 800;
-    font-display: swap;
+  font-family: 'Plus Jakarta Sans';
+  src: url('./assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: swap;
 }
 
 body {
-    background-color: $white;
-    color: $primary;
-    font-family: $font-sans;
-    -webkit-font-smoothing: antialiased;
+  background-color: $white;
+  color: $primary;
+  font-family: $font-sans;
+  -webkit-font-smoothing: antialiased;
 }
 
+@import "./styles/components/modal";
+@import "./styles/components/confirm-modal";
+@import "./styles/components/form-modal";
 /* 2. Import Modular Components */
 @import "./styles/components/table";
 @import "./styles/components/buttons";

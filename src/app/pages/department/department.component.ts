@@ -1,17 +1,20 @@
-import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  LucideSearch,
-  LucidePlus,
+  LucideArrowUpDown,
   LucideChevronLeft,
   LucideChevronRight,
-  LucideArrowUpDown,
-  LucideTrash2,
-  LucidePencil
+  LucidePencil,
+  LucidePlus,
+  LucideSearch,
+  LucideTrash2
 } from '@lucide/angular';
-import { DepartmentService } from '../../core/services/department.service';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
+import { ConfirmService } from '../../core/services/confirm.service';
+import { DepartmentService } from '../../core/services/department.service';
+import { ModalService } from '../../core/services/modal.service';
+import { DepartmentFormComponent } from './department-form.component';
 
 @Component({
   selector: 'app-department',
@@ -33,6 +36,9 @@ import { HasPermissionDirective } from '../../core/directives/has-permission.dir
 })
 export class DepartmentComponent implements OnInit {
   protected readonly service = inject(DepartmentService);
+
+  private confirm = inject(ConfirmService);
+  private modal = inject(ModalService);
 
   // --- Icons ---
   protected readonly LucideSearch = LucideSearch;
@@ -64,6 +70,16 @@ export class DepartmentComponent implements OnInit {
     ).subscribe();
   }
 
+  async openForm(department: any = null) {
+    const result = await this.modal.open(DepartmentFormComponent, {
+      department
+    });
+
+    if (result) {
+      this.fetchData();
+    }
+  }
+
   onSearch(query: string) {
     this.service.fetchAll(1, false, query).subscribe();
   }
@@ -80,18 +96,26 @@ export class DepartmentComponent implements OnInit {
   toggleSort(field: string) {
     const currentSort = this.service.sort();
     const [currField, currDir] = currentSort.split(':');
-
     let newDir = 'asc';
     if (currField === field && currDir === 'asc') {
       newDir = 'desc';
     }
-
     this.service.fetchAll(1, false, this.service.searchQuery(), this.service.limit(), `${field}:${newDir}`).subscribe();
   }
 
-  onDelete(id: string) {
-    if (confirm('Are you sure you want to delete this department?')) {
-      this.service.remove(id).subscribe();
+  async onDelete(id: string) {
+    const ok = await this.confirm.open({
+      title: 'Hapus Department',
+      message: 'Apakah Anda yakin ingin menghapus department ini?',
+      confirmText: 'Hapus',
+      cancelText: 'Batal'
+    });
+
+    if (ok) {
+      this.service.remove(id).subscribe({
+        next: () => this.fetchData()
+      });
     }
   }
 }
+

@@ -13,7 +13,7 @@
                     (ngModelChange)="onSearch($event)" />
             </div>
 
-            <button *hasPermission="'Department:create'" class="primary-button">
+            <button *hasPermission="'Department:create'" class="primary-button" (click)="openForm()">
                 <svg lucidePlus [size]="18"></svg>
                 <span>Add Department</span>
             </button>
@@ -67,7 +67,7 @@
                         </td>
                         <td>
                             <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem">
-                                <button class="action-icon-btn">
+                                <button class="action-icon-btn" (click)="openForm(dept)">
                                     <svg lucidePencil [size]="16"></svg>
                                 </button>
                                 <button (click)="onDelete(dept.id)" class="action-icon-btn delete">

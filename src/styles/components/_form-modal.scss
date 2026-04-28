@@ -1,0 +1,125 @@
+@use '../abstract/variables' as v;
+
+.form-modal {
+    .form-group {
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: v.$text-muted;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: v.$radius-base;
+            border: 1px solid v.$subtle;
+            font-family: v.$font-sans;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: v.$primary;
+            transition: v.$transition-base;
+
+            &::placeholder {
+                color: #cbd5e1;
+                font-weight: 500;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: v.$primary;
+                box-shadow: 0 0 0 4px rgba(v.$primary, 0.05);
+            }
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
+        }
+
+        &--inline {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: v.$surface-50;
+            border-radius: v.$radius-base;
+        }
+
+        &--error {
+            input {
+                border-color: #ef4444;
+                background-color: #fef2f2;
+            }
+        }
+    }
+
+    .form-error {
+        font-size: 11px;
+        font-weight: 700;
+        color: #ef4444;
+        margin-top: 0.25rem;
+    }
+
+    .form-banner--error {
+        padding: 1rem;
+        background: #fef2f2;
+        border-radius: v.$radius-xl;
+        color: #b91c1c;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        border: 1px solid #fee2e2;
+    }
+}
+
+/* Button Styles within Modal */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: v.$radius-base;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: v.$transition-base;
+    border: 1px solid v.$subtle;
+    background: white;
+    color: v.$primary;
+
+    &:hover {
+        background: v.$surface-50;
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
+
+    &-primary {
+        background: v.$primary;
+        color: white;
+        border-color: v.$primary;
+
+        &:hover {
+            background: v.$primary-light;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
