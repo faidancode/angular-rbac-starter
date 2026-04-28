@@ -1,11 +1,12 @@
+@use '../abstract/variables' as vars;
 
 .hris-table-wrapper {
-    background-color: $white;
-    border-radius: $radius-xl;
-    border: 1px solid $subtle;
+    background-color: vars.$white;
+    border-radius: vars.$radius-base;
+    border: 1px solid vars.$subtle;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: $transition-base;
+    transition: vars.$transition-base;
 
     table {
         width: 100%;
@@ -15,19 +16,19 @@
         thead th {
             padding: 1rem 1.5rem;
             font-size: 10px;
-            font-weight: 800;
+            font-weight: vars.$weight-extrabold;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: $text-muted;
-            border-bottom: 1px solid $subtle;
-            background-color: rgba($surface-50, 0.5);
+            color: vars.$text-muted;
+            border-bottom: 1px solid vars.$subtle;
+            background-color: rgba(vars.$surface-50, 0.5);
 
             &.sortable {
                 cursor: pointer;
-                transition: $transition-base;
+                transition: vars.$transition-base;
 
                 &:hover {
-                    color: $primary;
+                    color: vars.$primary;
                 }
 
                 .lucide {
@@ -38,7 +39,7 @@
         }
 
         tbody tr {
-            border-bottom: 1px solid $subtle;
+            border-bottom: 1px solid vars.$subtle;
             transition: background-color 0.2s ease;
 
             &:last-child {
@@ -46,76 +47,112 @@
             }
 
             &:hover {
-                background-color: rgba($surface-50, 0.5);
+                background-color: rgba(vars.$surface-50, 0.5);
             }
 
             td {
                 padding: 1rem 1.5rem;
-                font-size: 0.875rem;
-                font-weight: 600;
-                color: $primary;
+                font-size: vars.$text-sm;
+                font-weight: vars.$weight-semibold;
+                color: vars.$primary;
                 vertical-align: middle;
             }
         }
     }
 
-    .table-footer {
-        padding: 1.5rem;
-        border-top: 1px solid $subtle;
+    .table-header-toolbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: rgba($surface-50, 0.3);
+        padding: 1.5rem;
+        border-bottom: 1px solid vars.$subtle;
+
+        .toolbar-left {
+            display: flex;
+            flex-direction: column;
+
+            .title {
+                font-size: vars.$text-lg;
+                font-weight: vars.$weight-bold;
+                color: vars.$primary;
+            }
+
+            .subtitle {
+                font-size: 10px;
+                font-weight: vars.$weight-black;
+                text-transform: uppercase;
+                letter-spacing: 0.15em;
+                color: vars.$text-muted;
+            }
+        }
+    }
+
+    .pagination-toolbar {
+        padding: 1.5rem;
+        border-top: 1px solid vars.$subtle;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: rgba(vars.$surface-50, 0.3);
+
+        .page-info {
+            font-size: 10px;
+            font-weight: vars.$weight-black;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: vars.$text-muted;
+        }
+
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
     }
 }
 
-// Badge & Action Buttons
+// Badge
 .hris-badge {
     padding: 0.25rem 0.625rem;
     border-radius: 0.5rem;
     font-size: 10px;
-    font-weight: 800;
+    font-weight: vars.$weight-extrabold;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     border: 1px solid transparent;
 
     &.badge-success {
-        background-color: #f0fdf4;
-        color: #15803d;
+        background-color: vars.$success-bg;
+        color: vars.$success;
         border-color: #dcfce7;
     }
 
     &.badge-danger {
-        background-color: #fef2f2;
-        color: #b91c1c;
+        background-color: vars.$danger-bg;
+        color: vars.$danger;
         border-color: #fee2e2;
     }
 }
 
-.action-icon-btn {
-    width: 2.25rem;
-    height: 2.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    color: $text-muted;
-    transition: $transition-base;
-    border: none;
-    background: transparent;
-    cursor: pointer;
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
-    &:hover {
-        background-color: $surface-100;
-        color: $primary;
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
     }
 
-    &:active {
-        transform: scale(0.95);
+    50% {
+        opacity: 0.5;
     }
+}
 
-    &.delete:hover {
-        background-color: #fef2f2;
-        color: #dc2626;
-    }
+.loading-skeleton {
+    height: 1rem;
+    background-color: vars.$surface-100;
+    border-radius: 9999px;
+    width: 100%;
 }

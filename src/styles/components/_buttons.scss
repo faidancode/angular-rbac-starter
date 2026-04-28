@@ -1,0 +1,76 @@
+@use '../abstract/variables' as vars;
+
+.primary-button {
+    background-color: vars.$primary;
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: vars.$text-sm;
+    font-weight: vars.$weight-bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: vars.$transition-base;
+
+    &:hover {
+        background-color: vars.$primary-light;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.action-icon-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    color: vars.$text-muted;
+    transition: vars.$transition-base;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+        background-color: vars.$surface-100;
+        color: vars.$primary;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.delete:hover {
+        background-color: vars.$danger-bg;
+        color: #dc2626;
+    }
+}
+
+.page-btn-minimal {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    border: 1px solid vars.$subtle;
+    background-color: vars.$white;
+    color: vars.$primary;
+    cursor: pointer;
+    transition: vars.$transition-base;
+
+    &:hover:not(:disabled) {
+        background-color: vars.$surface-50;
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}

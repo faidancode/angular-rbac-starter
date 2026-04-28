@@ -21,6 +21,7 @@ export class DepartmentService {
     private _limit = signal(10);
     private _searchQuery = signal('');
     private _sort = signal('createdAt:desc');
+    private _hasNextPage = signal(false);
 
     // --- Public Signals (read-only) ---
     readonly departments = this._departments.asReadonly();
@@ -31,7 +32,7 @@ export class DepartmentService {
     readonly searchQuery = this._searchQuery.asReadonly();
     readonly sort = this._sort.asReadonly();
 
-    hasMore = computed(() => this._departments().length < this._total());
+    hasMore = this._hasNextPage.asReadonly();
 
     // --- Actions ---
     fetchAll(
@@ -65,6 +66,7 @@ export class DepartmentService {
                         this._departments.set(res.data);
                     }
                     this._total.set(res.meta?.total ?? res.data.length);
+                    this._hasNextPage.set(res.meta?.hasNextPage ?? false);
                     this._loading.set(false);
                 },
                 error: () => this._loading.set(false),

@@ -36,16 +36,16 @@
 
 .stats-grid {
   display: grid;
-  grid-template-cols: 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 
   @media (min-width: 640px) {
-    grid-template-cols: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (min-width: 1280px) {
-    grid-template-cols: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .stat-card {
@@ -120,17 +120,18 @@
 
 .dashboard-layout {
   display: grid;
-  grid-template-cols: 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
 
   @media (min-width: 1024px) {
-    grid-template-cols: repeat(12, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
 
   .main-chart-area {
     @media (min-width: 1024px) {
       grid-column: span 7;
     }
+
     background-color: white;
     border-radius: $radius-xl;
     border: 1px solid $subtle;
@@ -219,6 +220,7 @@
     @media (min-width: 1024px) {
       grid-column: span 5;
     }
+
     background-color: white;
     border-radius: $radius-xl;
     border: 1px solid $subtle;
@@ -300,7 +302,7 @@
 
           .badge-row {
             margin-top: 0.5rem;
-            
+
             .activity-badge {
               font-size: 10px;
               font-weight: 900;
@@ -388,27 +390,68 @@
 }
 
 /* Colors for dynamic classes */
-.bg-primary { background-color: $primary !important; }
-.bg-secondary { background-color: $secondary !important; }
-.bg-indigo-400 { background-color: #818cf8 !important; }
-.bg-emerald-400 { background-color: #34d399 !important; }
-.bg-amber-400 { background-color: #fbbf24 !important; }
+.bg-primary {
+  background-color: $primary !important;
+}
 
-.bg-indigo-50 { background-color: #eef2ff !important; }
-.text-indigo-600 { color: #4f46e5 !important; }
+.bg-secondary {
+  background-color: $secondary !important;
+}
 
-.bg-emerald-50 { background-color: #ecfdf5 !important; }
-.text-emerald-600 { color: #059669 !important; }
+.bg-indigo-400 {
+  background-color: #818cf8 !important;
+}
 
-.bg-sky-50 { background-color: #f0f9ff !important; }
-.text-sky-600 { color: #0284c7 !important; }
+.bg-emerald-400 {
+  background-color: #34d399 !important;
+}
 
-.bg-amber-50 { background-color: #fffbeb !important; }
-.text-amber-600 { color: #d97706 !important; }
+.bg-amber-400 {
+  background-color: #fbbf24 !important;
+}
+
+.bg-indigo-50 {
+  background-color: #eef2ff !important;
+}
+
+.text-indigo-600 {
+  color: #4f46e5 !important;
+}
+
+.bg-emerald-50 {
+  background-color: #ecfdf5 !important;
+}
+
+.text-emerald-600 {
+  color: #059669 !important;
+}
+
+.bg-sky-50 {
+  background-color: #f0f9ff !important;
+}
+
+.text-sky-600 {
+  color: #0284c7 !important;
+}
+
+.bg-amber-50 {
+  background-color: #fffbeb !important;
+}
+
+.text-amber-600 {
+  color: #d97706 !important;
+}
 
 @keyframes slideInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-in {

@@ -1,27 +1,30 @@
+@import "./styles/abstract/variables";
+
 /* 1. Reset & Global Base */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('./assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
-  font-weight: 100 800;
-  font-display: swap;
+    font-family: 'Plus Jakarta Sans';
+    src: url('./assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 800;
+    font-display: swap;
 }
 
 body {
-  background-color: #ffffff;
-  color: #0f172a;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
+    background-color: $white;
+    color: $primary;
+    font-family: $font-sans;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* 2. Import Modular Components */
-@import "./styles/abstract/variables";
 @import "./styles/components/table";
+@import "./styles/components/buttons";
+@import "./styles/components/forms";
 
 /* 3. Global UI Utils (Ganti utility tailwind yang sering dipakai) */
 .flex {
