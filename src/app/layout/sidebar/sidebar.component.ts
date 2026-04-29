@@ -9,6 +9,7 @@ import {
   LucideChevronRight,
   LucideBuilding,
   LucideDynamicIcon,
+  LucideUserStar,
 } from '@lucide/angular';
 
 import { AbilityService } from '../../core/services/ability.service';
@@ -57,6 +58,12 @@ export class SidebarComponent {
       route: '/departments',
       icon: LucideBuilding,
       permission: 'Department:read',
+    },
+    {
+      label: 'Positions',
+      route: '/positions',
+      icon: LucideUserStar,
+      permission: 'Position:read',
     },
     {
       label: 'Access Control',

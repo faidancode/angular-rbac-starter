@@ -20,3 +20,15 @@ export interface Department {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Position {
+  id: string;
+  name: string;
+  description?: string;
+  departmentId: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+

@@ -30,6 +30,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/department/department.component').then((m) => m.DepartmentComponent),
       },
+      {
+        path: 'positions',
+        canActivate: [permissionGuard('Position:read')],
+        loadComponent: () =>
+          import('./pages/positions/positions.component').then((m) => m.PositionComponent),
+      },
 
       {
         path: 'roles',
