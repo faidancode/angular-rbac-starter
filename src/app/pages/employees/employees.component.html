@@ -1,0 +1,148 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-header__content">
+      <h2>Employees</h2>
+      <p>Employee records, access status, and assignment data.</p>
+    </div>
+
+    <div class="page-header__actions">
+      <div class="search-field">
+        <svg lucideSearch class="search-icon" [size]="18"></svg>
+        <input
+          type="text"
+          placeholder="Search employees..."
+          [ngModel]="service.searchQuery()"
+          (ngModelChange)="onSearch($event)"
+        />
+      </div>
+
+      <button *hasPermission="'Employee:create'" class="btn btn-primary" (click)="openForm()">
+        <svg lucidePlus [size]="18"></svg>
+        <span>Add Employee</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="hris-table-wrapper">
+    <div class="table-header-toolbar">
+      <div class="toolbar-left">
+        <span class="title">All Employees</span>
+        <span class="subtitle"> Total {{ service.total() }} Employees </span>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" (click)="toggleSort('fullName')">
+              Employee <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('gender')">
+              Gender <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('positionName')">
+              Position <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('employeeStatus')">
+              Status <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('createdAt')">
+              Created <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="actions-head">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (service.loading()) {
+            @for (i of [1, 2, 3]; track i) {
+              <tr class="animate-pulse">
+                <td colspan="6">
+                  <div class="loading-skeleton"></div>
+                </td>
+              </tr>
+            }
+          } @else {
+            @for (employee of service.employees(); track employee.id) {
+              <tr>
+                <td>
+                  <div class="employee-info-cell">
+                    <div class="avatar">{{ employee.fullName.charAt(0) }}</div>
+                    <div class="details">
+                      <span class="name">{{ employee.fullName }}</span>
+                      <span class="nip">{{ employee.nip }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ displayGender(employee) }}</td>
+                <td>{{ employee.positionName }}</td>
+                <td>
+                  <span
+                    class="hris-badge"
+                    [ngClass]="employee.isActive ? 'badge-success' : 'badge-danger'"
+                  >
+                    {{ displayStatus(employee) }}
+                  </span>
+                </td>
+                <td class="muted-cell">
+                  {{ employee.createdAt | date: 'dd MMM yyyy' }}
+                </td>
+                <td class="actions-cell">
+                  <div class="action-row">
+                    <button *hasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)">
+                      <svg lucidePencil [size]="16"></svg>
+                    </button>
+                    <button *hasPermission="'Employee:delete'" (click)="onDelete(employee.id)" class="action-icon-btn delete">
+                      <svg lucideTrash2 [size]="16"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">No employees found matching your search.</div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-toolbar">
+      <div>
+        <span class="page-info">Per page</span>
+        <select
+          [ngModel]="service.limit()"
+          (ngModelChange)="onLimitChange($event)"
+          class="limit-select"
+          id="limit-select"
+        >
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+
+      <div class="page-controls">
+        <button
+          class="page-btn-minimal"
+          [disabled]="service.page() === 1"
+          (click)="onPageChange(service.page() - 1)"
+        >
+          <svg lucideChevronLeft [size]="18"></svg>
+        </button>
+        <span class="page-info"> Page {{ service.page() }} </span>
+        <button
+          class="page-btn-minimal"
+          [disabled]="service.loading() || !service.hasMore()"
+          aria-label="Next page"
+          (click)="onPageChange(service.page() + 1)"
+        >
+          <svg lucideChevronRight [size]="18"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,192 +1,134 @@
-import { Component, signal, computed, inject } from '@angular/core';
-import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 import { CommonModule } from '@angular/common';
-import { LucideSearch } from '@lucide/angular';
-
-
-interface Employee {
-  id: number;
-  name: string;
-  initials: string;
-  nip: string;
-  department: string;
-  position: string;
-  status: 'Active' | 'Inactive' | 'On Leave';
-}
+import { Component, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  LucideArrowUpDown,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucidePencil,
+  LucidePlus,
+  LucideSearch,
+  LucideTrash2,
+} from '@lucide/angular';
+import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
+import { ConfirmService } from '../../core/services/confirm.service';
+import { EmployeeService } from '../../core/services/employee.service';
+import { ModalService } from '../../core/services/modal.service';
+import { ToastService } from '../../shared/services/toast.service';
+import { Employee } from '../../core/types/api.types';
+import { EmployeeFormComponent } from './employee-form.component';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, HasPermissionDirective, LucideSearch],
-  template: `
-    <div class="employees-container">
-      <div class="employees-header">
-        <div class="header-content">
-          <h2>Employee Directory</h2>
-          <p>{{ filtered().length }} of {{ employees.length }} employees</p>
-        </div>
-        <div class="header-actions">
-          <div class="search-field">
-            <svg lucideSearch class="search-icon" [size]="18"></svg>
-            <input
-              (input)="search.set($any($event.target).value)"
-              placeholder="Search employees..."
-            />
-          </div>
-          <button
-            *hasPermission="'Employee:create'"
-            class="primary-button"
-          >
-            <span>+ Add Employee</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="hris-table-wrapper">
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                @for (col of columns; track col) {
-                  <th>{{ col }}</th>
-                }
-                <th style="width: 150px"></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (emp of filtered(); track emp.id) {
-                <tr>
-                  <td>
-                    <div class="employee-info-cell">
-                      <div class="avatar">{{ emp.initials }}</div>
-                      <div class="details">
-                        <span class="name">{{ emp.name }}</span>
-                        <span class="nip">{{ emp.nip }}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="color: #64748b">{{ emp.department }}</td>
-                  <td style="color: #64748b">{{ emp.position }}</td>
-                  <td>
-                    <span
-                      class="status-badge"
-                      [ngClass]="'status-' + emp.status.toLowerCase().replace(' ', '-')"
-                    >
-                      {{ emp.status }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="action-row">
-                      <button
-                        *hasPermission="'Employee:update'"
-                        class="btn-minimal edit"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        *hasPermission="'Employee:delete'"
-                        class="btn-minimal delete"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="5">
-                    <div class="empty-state">No employees found matching your search.</div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `,
-  styleUrls: ['./employees.component.scss']
+  imports: [
+    CommonModule,
+    FormsModule,
+    HasPermissionDirective,
+    LucideSearch,
+    LucidePlus,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideArrowUpDown,
+    LucideTrash2,
+    LucidePencil,
+  ],
+  templateUrl: './employees.component.html',
+  styleUrls: ['./employees.component.scss'],
 })
-export class EmployeesComponent {
-  search = signal('');
-  columns = ['Employee', 'Department', 'Position', 'Status'];
+export class EmployeesComponent implements OnInit {
+  protected readonly service = inject(EmployeeService);
 
-  employees: Employee[] = [
-    {
-      id: 1,
-      name: 'Ahmad Fauzi',
-      initials: 'AF',
-      nip: 'NIP-20210001',
-      department: 'Engineering',
-      position: 'Senior Dev',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      name: 'Sari Dewi',
-      initials: 'SD',
-      nip: 'NIP-20210045',
-      department: 'HR',
-      position: 'HR Manager',
-      status: 'Active',
-    },
-    {
-      id: 3,
-      name: 'Budi Santoso',
-      initials: 'BS',
-      nip: 'NIP-20190023',
-      department: 'Finance',
-      position: 'Accountant',
-      status: 'On Leave',
-    },
-    {
-      id: 4,
-      name: 'Rina Kusuma',
-      initials: 'RK',
-      nip: 'NIP-20220078',
-      department: 'Marketing',
-      position: 'Brand Manager',
-      status: 'Active',
-    },
-    {
-      id: 5,
-      name: 'Doni Pratama',
-      initials: 'DP',
-      nip: 'NIP-20180011',
-      department: 'Sales',
-      position: 'Sales Lead',
-      status: 'Inactive',
-    },
-    {
-      id: 6,
-      name: 'Maya Anggraini',
-      initials: 'MA',
-      nip: 'NIP-20230102',
-      department: 'Engineering',
-      position: 'Junior Dev',
-      status: 'Active',
-    },
-  ];
+  private confirm = inject(ConfirmService);
+  private modal = inject(ModalService);
+  private toast = inject(ToastService);
 
-  filtered = computed(() => {
-    const q = this.search().toLowerCase();
-    return q
-      ? this.employees.filter(
-        (e) =>
-          e.name.toLowerCase().includes(q) ||
-          e.department.toLowerCase().includes(q) ||
-          e.position.toLowerCase().includes(q),
+  // --- Icons ---
+  protected readonly LucideSearch = LucideSearch;
+  protected readonly LucidePlus = LucidePlus;
+  protected readonly LucideChevronLeft = LucideChevronLeft;
+  protected readonly LucideChevronRight = LucideChevronRight;
+  protected readonly LucideArrowUpDown = LucideArrowUpDown;
+  protected readonly LucideTrash2 = LucideTrash2;
+  protected readonly LucidePencil = LucidePencil;
+
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.service
+      .fetchAll(
+        this.service.page(),
+        false,
+        this.service.searchQuery(),
+        this.service.limit(),
+        this.service.sort(),
       )
-      : this.employees;
-  });
+      .subscribe();
+  }
 
-  statusClass(status: string): string {
-    return (
-      {
-        Active: 'bg-emerald-500/15 text-emerald-400',
-        Inactive: 'bg-slate-500/15 text-slate-400',
-        'On Leave': 'bg-amber-500/15 text-amber-400',
-      }[status] ?? ''
-    );
+  async openForm(employee: Employee | null = null) {
+    const result = await this.modal.open(EmployeeFormComponent, {
+      employee,
+    });
+
+    if (result) {
+      this.fetchData();
+    }
+  }
+
+  onSearch(query: string) {
+    this.service
+      .fetchAll(1, false, query, this.service.limit(), this.service.sort())
+      .subscribe();
+  }
+
+  onLimitChange(limit: number) {
+    this.service.updateLimit(limit);
+    this.fetchData();
+  }
+
+  onPageChange(page: number) {
+    this.service
+      .fetchAll(page, false, this.service.searchQuery(), this.service.limit(), this.service.sort())
+      .subscribe();
+  }
+
+  toggleSort(field: string) {
+    const currentSort = this.service.sort();
+    const [currField, currDir] = currentSort.split(':');
+    let newDir = 'asc';
+    if (currField === field && currDir === 'asc') {
+      newDir = 'desc';
+    }
+
+    this.service
+      .fetchAll(1, false, this.service.searchQuery(), this.service.limit(), `${field}:${newDir}`)
+      .subscribe();
+  }
+
+  displayGender(employee: Employee): string {
+    return employee.genderLabel || employee.gender || '-';
+  }
+
+  displayStatus(employee: Employee): string {
+    return employee.employeeStatusLabel || employee.employeeStatus || '-';
+  }
+
+  async onDelete(id: string) {
+    const ok = await this.confirm.open({
+      title: 'Hapus Employee',
+      message: 'Apakah Anda yakin ingin menghapus employee ini?',
+      confirmText: 'Hapus',
+      cancelText: 'Batal',
+    });
+
+    if (ok) {
+      this.toast.success('Berhasil dihapus');
+      this.service.remove(id).subscribe({
+        next: () => this.fetchData(),
+      });
+    }
   }
 }

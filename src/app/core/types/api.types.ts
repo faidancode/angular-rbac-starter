@@ -31,4 +31,32 @@ export interface Position {
   updatedAt: string;
 }
 
+// --- Employee ---
+export interface Employee {
+  id: string;
+  nip: string;
+  fullName: string;
+  gender: string;
+  genderLabel: string;
+  employeeStatus: string;
+  employeeStatusLabel: string;
+  positionId: string;
+  positionName: string;
+  isActive: boolean;
+  isActiveLabel: string;
+  dateOfJoining: string;
+  dateOfActivePosition: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
+export interface EmployeePayload {
+  nip: string;
+  fullName: string;
+  gender: string;
+  positionId: string;
+  employeeStatus: string;
+  isActive: boolean;
+  dateOfJoining?: string;
+  dateOfActivePosition?: string;
+}
