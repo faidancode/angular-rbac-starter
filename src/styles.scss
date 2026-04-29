@@ -1,4 +1,4 @@
-@import "./styles/abstract/variables";
+@import './styles/abstract/variables';
 
 /* 1. Reset & Global Base */
 * {
@@ -21,13 +21,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-@import "./styles/components/modal";
-@import "./styles/components/confirm-modal";
-@import "./styles/components/form-modal";
+@import './styles/pages/page';
+@import './styles/components/modal';
+@import './styles/components/confirm-modal';
+@import './styles/components/form-modal';
 /* 2. Import Modular Components */
-@import "./styles/components/table";
-@import "./styles/components/buttons";
-@import "./styles/components/forms";
+@import './styles/components/table';
+@import './styles/components/buttons';
+@import './styles/components/forms';
 
 /* 3. Global UI Utils (Ganti utility tailwind yang sering dipakai) */
 .flex {
@@ -46,7 +47,7 @@ body {
   gap: 0.5rem;
 }
 
-.space-y-8>*+* {
+.space-y-8 > * + * {
   margin-top: 2rem;
 }
 

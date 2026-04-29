@@ -1,0 +1,41 @@
+<div class="shell-container">
+  <app-sidebar [collapsed]="isCollapsed()" (toggleCollapse)="isCollapsed.set(!isCollapsed())" />
+
+  <main class="shell-main">
+    <header>
+      <div class="header-left">
+        <button (click)="isCollapsed.set(!isCollapsed())" class="menu-toggle">
+          <svg lucideMenu [size]="20"></svg>
+        </button>
+
+        <div class="workspace-info">
+          <span class="workspace-label">Current Workspace</span>
+          <h1>
+            <span class="pulse-dot"></span>
+            CORE_SYSTEM / {{ user()?.roleName ?? 'GUEST' }}
+          </h1>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="user-profile">
+          <div class="user-info">
+            <span class="user-name">{{ user()?.name ?? 'Anonymous' }}</span>
+            <span class="user-role">{{ user()?.roleName ?? 'Unauthorized' }}</span>
+          </div>
+
+          <div class="user-avatar">
+            <span>{{ initials() }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content-section custom-scrollbar">
+      <div class="grid-pattern"></div>
+      <div class="content-wrapper">
+        <router-outlet />
+      </div>
+    </section>
+  </main>
+</div>

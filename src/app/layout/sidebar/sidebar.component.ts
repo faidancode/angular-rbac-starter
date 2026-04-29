@@ -1,13 +1,15 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-  inject,
-  input,
-  computed,
-} from '@angular/core';
+import { Component, EventEmitter, Output, inject, input, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { LucideCpu, LucideLayoutDashboard, LucideUsers, LucideKey, LucideChevronLeft, LucideChevronRight, LucideBuilding, LucideDynamicIcon } from '@lucide/angular';
+import {
+  LucideCpu,
+  LucideLayoutDashboard,
+  LucideUsers,
+  LucideKey,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideBuilding,
+  LucideDynamicIcon,
+} from '@lucide/angular';
 
 import { AbilityService } from '../../core/services/ability.service';
 import { NavItem } from './sidebar.types';
@@ -24,65 +26,10 @@ import { NavItem } from './sidebar.types';
     LucideKey,
     LucideChevronLeft,
     LucideChevronRight,
-    LucideBuilding
+    LucideBuilding,
   ],
-  template: `
-    <aside [class.collapsed]="collapsed()" class="sidebar-container">
-      <div class="sidebar-header">
-        <div class="logo-box">
-          <div class="icon-square">
-            <svg lucideCpu [size]="16" color="white"></svg>
-          </div>
-          @if (!collapsed()) {
-            <span class="brand-text">HRIS_TERMINAL</span>
-          }
-        </div>
-      </div>
-
-      <nav class="sidebar-nav custom-scrollbar">
-        <div class="nav-section">
-          @if (!collapsed()) {
-            <p class="section-label">Core Systems</p>
-          }
-
-          <div class="nav-list">
-            @for (item of visibleNavItems(); track item.route) {
-              <a
-                [routerLink]="item.route"
-                routerLinkActive="active-link"
-                class="nav-item group"
-              >
-                <div class="active-indicator"></div>
-
-                <div class="nav-icon">
-                  <svg [lucideIcon]="item.icon" [size]="20"></svg>
-                </div>
-
-                @if (!collapsed()) {
-                  <span class="nav-label">{{ item.label }}</span>
-                }
-
-                @if (collapsed()) {
-                  <div class="nav-tooltip">
-                    {{ item.label }}
-                  </div>
-                }
-              </a>
-            }
-          </div>
-        </div>
-      </nav>
-
-      <div class="sidebar-footer">
-        @if (!collapsed()) {
-          <span class="status-text">SYSTEM_ONLINE</span>
-        } @else {
-          <div class="status-pulse"></div>
-        }
-      </div>
-    </aside>
-  `,
-  styleUrls: ['./sidebar.component.scss'] // Atau masukkan ke blok styles di bawah
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'], // Atau masukkan ke blok styles di bawah
 })
 export class SidebarComponent {
   // --- state ---
@@ -133,9 +80,7 @@ export class SidebarComponent {
 
   // --- helper ---
   private parsePermission(value: string) {
-    const [subject, action] = value.includes('.')
-      ? value.split('.')
-      : value.split(':');
+    const [subject, action] = value.includes('.') ? value.split('.') : value.split(':');
 
     return { action, subject };
   }
