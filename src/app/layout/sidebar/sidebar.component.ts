@@ -7,10 +7,7 @@ import {
   LucideKey,
   LucideChevronLeft,
   LucideChevronRight,
-  LucideBuilding,
   LucideDynamicIcon,
-  LucideUserStar,
-  LucideShieldUser,
 } from '@lucide/angular';
 
 import { AbilityService } from '../../core/services/ability.service';
@@ -28,7 +25,6 @@ import { NavItem } from './sidebar.types';
     LucideKey,
     LucideChevronLeft,
     LucideChevronRight,
-    LucideBuilding,
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'], // Atau masukkan ke blok styles di bawah
@@ -49,26 +45,23 @@ export class SidebarComponent {
   navItems = signal<NavItem[]>([
     { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
     {
-      label: 'Employee',
+      label: 'Employees',
       icon: LucideUsers,
       expanded: false,
       children: [
         {
           label: 'Department',
           route: '/departments',
-          icon: LucideBuilding,
           permission: 'Department:read',
         },
         {
           label: 'Position',
           route: '/positions',
-          icon: LucideUserStar,
           permission: 'Position:read',
         },
         {
           label: 'Employee',
           route: '/employees',
-          icon: LucideUsers,
           permission: 'Employee:read',
         },
       ]
@@ -81,13 +74,11 @@ export class SidebarComponent {
         {
           label: 'Users',
           route: '/users',
-          icon: LucideShieldUser,
           permission: 'User:read',
         },
         {
           label: 'Access Control',
           route: '/roles',
-          icon: LucideKey,
           permission: 'Role:read',
         },
       ]
