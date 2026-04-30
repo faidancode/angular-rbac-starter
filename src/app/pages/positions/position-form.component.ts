@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Position } from '../../core/types/api.types';
 import { PositionService } from '../../core/services/position.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { DepartmentService } from '../../core/services/department.service';
 
 @Component({
   selector: 'app-position-form',
@@ -15,6 +16,7 @@ export class PositionFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private positionService = inject(PositionService);
   private toast = inject(ToastService);
+  protected readonly departmentService = inject(DepartmentService);
 
   @Input() position: Position | null = null;
 
@@ -27,6 +29,7 @@ export class PositionFormComponent implements OnInit {
 
   positionForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
+    departmentId: ['', [Validators.required]],
     isActive: [true],
   });
 
@@ -34,7 +37,17 @@ export class PositionFormComponent implements OnInit {
     if (this.position) {
       this.positionForm.patchValue({
         name: this.position.name,
+        departmentId: this.position.departmentId,
         isActive: this.position.isActive ?? true,
+      });
+    }
+
+    if (!this.departmentService.departments().length && !this.departmentService.loading()) {
+      const previousLimit = this.departmentService.limit();
+
+      this.departmentService.fetchAll(1, false, '', 1000).subscribe({
+        next: () => this.departmentService.updateLimit(previousLimit),
+        error: () => this.departmentService.updateLimit(previousLimit),
       });
     }
 

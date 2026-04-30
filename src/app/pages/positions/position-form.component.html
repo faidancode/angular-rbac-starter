@@ -33,6 +33,27 @@
         </div>
       </div>
 
+      <div class="form-group" [class.form-group--error]="isInvalid('departmentId')">
+        <label for="departmentId">Position</label>
+        <select id="departmentId" formControlName="departmentId">
+          <option value="" disabled>
+            {{ departmentService.loading() ? 'Loading departments...' : 'Select department' }}
+          </option>
+          @for (department of departmentService.departments(); track department.id) {
+            <option [value]="department.id">{{ department.name }}</option>
+          }
+        </select>
+
+        <div
+          class="form-error"
+          *ngIf="
+            isInvalid('departmentId') && !positionForm.get('departmentId')?.hasError('conflict')
+          "
+        >
+          Position is required
+        </div>
+      </div>
+
       <div class="form-group form-group--inline">
         <label for="isActive">Availability Status</label>
         <div class="checkbox-wrapper">
