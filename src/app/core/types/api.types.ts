@@ -12,6 +12,14 @@ export interface ApiResponse<T> {
   };
 }
 
+export interface DashboardSummary {
+  totalActiveEmployees: number;
+  totalMaleEmployees: number;
+  totalFemaleEmployees: number;
+  totalPermanentEmployees: number;
+  totalContractEmployees: number;
+}
+
 export interface Department {
   id: string;
   name: string;

@@ -4,96 +4,25 @@
       <h2>Dashboard Overview</h2>
       <p>Real-time insights across your global workforce.</p>
     </div>
-    <div class="header-actions">
-      <button class="secondary-button">
-        <svg lucideDownload [size]="18"></svg>
-        <span>Export Report</span>
-      </button>
-      <button class="primary-button">
-        <svg lucidePlus [size]="18"></svg>
-        <span>Add Employee</span>
-      </button>
-    </div>
+
   </header>
 
   <section class="stats-grid">
-    @for (card of stats; track card.label) {
-      <div class="stat-card">
-        <div class="card-header">
-          <div class="icon-box" [class]="card.color">
-            <svg [lucideIcon]="card.icon" [size]="24"></svg>
-          </div>
-          <span
-            class="change-badge"
-            [class.positive]="card.positive"
-            [class.negative]="!card.positive"
-          >
-            {{ card.change }}
-          </span>
+    @for (card of stats(); track card.label) {
+    <div class="stat-card">
+      <div class="card-header">
+        <div class="icon-box" [class]="card.color">
+          <svg [lucideIcon]="card.icon" [size]="24"></svg>
         </div>
-        <div class="card-body">
-          <p class="card-label">{{ card.label }}</p>
-          <p class="card-value">{{ card.value }}</p>
-        </div>
+        <span class="change-badge" [class.positive]="card.positive" [class.negative]="!card.positive">
+          {{ card.change }}
+        </span>
       </div>
+      <div class="card-body">
+        <p class="card-label">{{ card.label }}</p>
+        <p class="card-value">{{ card.value }}</p>
+      </div>
+    </div>
     }
   </section>
-
-  <div class="dashboard-layout">
-    <div class="main-chart-area">
-      <div class="section-header">
-        <h3>Workforce Distribution</h3>
-        <a href="#" class="view-link">View Analytics</a>
-      </div>
-
-      <div class="distribution-list">
-        @for (dept of departments; track dept.name) {
-          <div class="distribution-item">
-            <div class="item-info">
-              <div class="label-group">
-                <span class="count">{{ dept.count }} Employees</span>
-                <span class="name">{{ dept.name }}</span>
-              </div>
-              <span class="percentage">{{ dept.pct }}%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" [class]="dept.color" [style.width]="dept.pct + '%'"></div>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-
-    <div class="activity-feed">
-      <h3>System Activity</h3>
-
-      <div class="feed-container">
-        @for (activity of activities; track activity.id) {
-          <div class="activity-item">
-            @if (!$last) {
-              <div class="line"></div>
-            }
-
-            <div class="icon-circle">
-              <svg [lucideIcon]="activity.icon" [size]="18"></svg>
-            </div>
-
-            <div class="item-content">
-              <div class="content-header">
-                <p>{{ activity.title }}</p>
-                <span class="time">{{ activity.time }}</span>
-              </div>
-              <div class="badge-row">
-                <span class="activity-badge" [class]="activity.badgeClass">
-                  {{ activity.badge }}
-                </span>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-
-      <button class="load-more-btn">Load Full Audit Log</button>
-    </div>
-  </div>
 </div>

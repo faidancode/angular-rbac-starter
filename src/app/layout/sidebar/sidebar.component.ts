@@ -8,6 +8,7 @@ import {
   LucideChevronLeft,
   LucideChevronRight,
   LucideDynamicIcon,
+  LucideLayoutGrid
 } from '@lucide/angular';
 
 import { AbilityService } from '../../core/services/ability.service';
@@ -19,7 +20,7 @@ import { NavItem } from './sidebar.types';
     RouterLink,
     RouterLinkActive,
     LucideDynamicIcon,
-    LucideCpu,
+    LucideLayoutGrid,
     LucideLayoutDashboard,
     LucideUsers,
     LucideKey,
@@ -37,7 +38,7 @@ export class SidebarComponent {
   private ability = inject(AbilityService);
 
   // --- icons (exposed to template) ---
-  protected readonly LucideCpu = LucideCpu;
+  protected readonly LucideLayoutGrid = LucideLayoutGrid;
   protected readonly LucideChevronLeft = LucideChevronLeft;
   protected readonly LucideChevronRight = LucideChevronRight;
 

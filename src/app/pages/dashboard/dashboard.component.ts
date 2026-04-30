@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
+import { DashboardService } from '../../core/services/dashboard.service';
 import {
   LucideCalendarCheck,
   LucideCircleCheck,
@@ -29,41 +30,59 @@ interface StatCard {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {
-  stats = [
-    {
-      label: 'Total Employees',
-      value: '1,284',
-      change: '+12%',
-      positive: true,
-      icon: LucideUsers,
-      color: 'bg-indigo-50 text-indigo-600',
-    },
-    {
-      label: 'Active Status',
-      value: '1,201',
-      change: '93.5%',
-      positive: true,
-      icon: LucideCircleCheck,
-      color: 'bg-emerald-50 text-emerald-600',
-    },
-    {
-      label: 'New Hires',
-      value: '47',
-      change: '+8%',
-      positive: true,
-      icon: LucideUserPlus,
-      color: 'bg-sky-50 text-sky-600',
-    },
-    {
-      label: 'On Leave',
-      value: '83',
-      change: '-2%',
-      positive: false,
-      icon: LucidePlane,
-      color: 'bg-amber-50 text-amber-600',
-    },
-  ];
+export class DashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+
+  ngOnInit(): void {
+    this.dashboardService.fetchAll().subscribe();
+  }
+
+  stats = computed(() => {
+    const summary = this.dashboardService.dashboardSummary();
+    console.log(summary);
+    return [
+      {
+        label: 'Total Active Employees',
+        value: summary?.totalActiveEmployees?.toLocaleString() || '0',
+        change: 'Active',
+        positive: true,
+        icon: LucideUsers,
+        color: 'bg-indigo-50 text-indigo-600',
+      },
+      {
+        label: 'Total Male',
+        value: summary?.totalMaleEmployees?.toLocaleString() || '0',
+        change: 'Gender',
+        positive: true,
+        icon: LucideUserPlus,
+        color: 'bg-sky-50 text-sky-600',
+      },
+      {
+        label: 'Total Female',
+        value: summary?.totalFemaleEmployees?.toLocaleString() || '0',
+        change: 'Gender',
+        positive: true,
+        icon: LucideUserPlus,
+        color: 'bg-amber-50 text-amber-600',
+      },
+      {
+        label: 'Permanent Status',
+        value: summary?.totalPermanentEmployees?.toLocaleString() || '0',
+        change: 'Status',
+        positive: true,
+        icon: LucideCircleCheck,
+        color: 'bg-emerald-50 text-emerald-600',
+      },
+      {
+        label: 'Contract Status',
+        value: summary?.totalContractEmployees?.toLocaleString() || '0',
+        change: 'Status',
+        positive: true,
+        icon: LucideCircleCheck,
+        color: 'bg-indigo-50 text-indigo-600',
+      },
+    ];
+  });
 
   departments = [
     { name: 'Engineering', count: 312, pct: 24, color: 'bg-primary' },
