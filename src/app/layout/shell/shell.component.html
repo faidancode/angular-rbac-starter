@@ -7,18 +7,10 @@
         <button (click)="isCollapsed.set(!isCollapsed())" class="menu-toggle">
           <svg lucideMenu [size]="20"></svg>
         </button>
-
-        <div class="workspace-info">
-          <span class="workspace-label">Current Workspace</span>
-          <h1>
-            <span class="pulse-dot"></span>
-            CORE_SYSTEM / {{ user()?.roleName ?? 'GUEST' }}
-          </h1>
-        </div>
       </div>
 
       <div class="header-right">
-        <div class="user-profile">
+        <div class="user-profile" (click)="toggleDropdown()">
           <div class="user-info">
             <span class="user-name">{{ user()?.name ?? 'Anonymous' }}</span>
             <span class="user-role">{{ user()?.roleName ?? 'Unauthorized' }}</span>
@@ -27,6 +19,13 @@
           <div class="user-avatar">
             <span>{{ initials() }}</span>
           </div>
+
+          @if (isDropdownOpen()) {
+            <div class="profile-dropdown">
+              <button class="dropdown-item">Profile</button>
+              <button class="dropdown-item text-danger" (click)="logout()">Logout</button>
+            </div>
+          }
         </div>
       </div>
     </header>

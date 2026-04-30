@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   LucideCpu,
@@ -46,51 +46,83 @@ export class SidebarComponent {
   protected readonly LucideChevronRight = LucideChevronRight;
 
   // --- nav config ---
-  private readonly navItems: NavItem[] = [
+  navItems = signal<NavItem[]>([
     { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
     {
-      label: 'Employees',
-      route: '/employees',
+      label: 'Employee',
       icon: LucideUsers,
-      permission: 'Employee:read',
+      expanded: false,
+      children: [
+        {
+          label: 'Department',
+          route: '/departments',
+          icon: LucideBuilding,
+          permission: 'Department:read',
+        },
+        {
+          label: 'Position',
+          route: '/positions',
+          icon: LucideUserStar,
+          permission: 'Position:read',
+        },
+        {
+          label: 'Employee',
+          route: '/employees',
+          icon: LucideUsers,
+          permission: 'Employee:read',
+        },
+      ]
     },
     {
-      label: 'Departments',
-      route: '/departments',
-      icon: LucideBuilding,
-      permission: 'Department:read',
-    },
-    {
-      label: 'Positions',
-      route: '/positions',
-      icon: LucideUserStar,
-      permission: 'Position:read',
-    },
-    {
-      label: 'Users',
-      route: '/users',
-      icon: LucideShieldUser,
-      permission: 'User:read',
-    },
-    {
-      label: 'Access Control',
-      route: '/roles',
+      label: 'Setting',
       icon: LucideKey,
-      permission: 'Role:read',
+      expanded: false,
+      children: [
+        {
+          label: 'Users',
+          route: '/users',
+          icon: LucideShieldUser,
+          permission: 'User:read',
+        },
+        {
+          label: 'Access Control',
+          route: '/roles',
+          icon: LucideKey,
+          permission: 'Role:read',
+        },
+      ]
     },
-  ];
+  ]);
 
   // --- computed (IMPORTANT: no function in template) ---
   protected readonly visibleNavItems = computed(() => {
     if (!this.ability.permissionsLoaded()) return [];
 
-    return this.navItems.filter((item) => {
-      if (!item.permission) return true;
-
-      const { action, subject } = this.parsePermission(item.permission);
-      return this.ability.can(action, subject);
-    });
+    return this.navItems()
+      .map(item => {
+        if (item.children) {
+          const filteredChildren = item.children.filter(child => {
+            if (!child.permission) return true;
+            const { action, subject } = this.parsePermission(child.permission);
+            return this.ability.can(action, subject);
+          });
+          return { ...item, children: filteredChildren };
+        }
+        return item;
+      })
+      .filter(item => {
+        if (item.children) return item.children.length > 0;
+        if (!item.permission) return true;
+        const { action, subject } = this.parsePermission(item.permission);
+        return this.ability.can(action, subject);
+      });
   });
+
+  toggleMenu(item: NavItem) {
+    if (item.children) {
+      this.navItems.update(items => items.map(i => i.label === item.label ? { ...i, expanded: !i.expanded } : i));
+    }
+  }
 
   // --- helper ---
   private parsePermission(value: string) {

@@ -107,14 +107,6 @@ import {
           </form>
 
           <footer>
-            <div class="secure-badge">
-              <svg lucideShieldCheck [size]="18"></svg>
-              <span>Secure SSO</span>
-            </div>
-            <div class="status-indicator">
-              <div class="dot"></div>
-              <span>Systems Active</span>
-            </div>
           </footer>
         </div>
       </div>

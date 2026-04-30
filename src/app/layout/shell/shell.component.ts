@@ -14,6 +14,8 @@ import { AuthService } from '../../core/services/auth.service';
 export class ShellComponent {
   auth = inject(AuthService);
   isCollapsed = signal(false);
+  isDropdownOpen = signal(false);
+
   user = this.auth.currentUser;
   initials = computed(
     () =>
@@ -27,4 +29,12 @@ export class ShellComponent {
 
   protected readonly LucideSearch = LucideSearch;
   protected readonly LucideMenu = LucideMenu;
+
+  toggleDropdown() {
+    this.isDropdownOpen.update((v) => !v);
+  }
+
+  logout() {
+    this.auth.logout();
+  }
 }

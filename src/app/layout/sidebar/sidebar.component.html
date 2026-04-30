@@ -17,24 +17,51 @@
       }
 
       <div class="nav-list">
-        @for (item of visibleNavItems(); track item.route) {
-          <a [routerLink]="item.route" routerLinkActive="active-link" class="nav-item group">
-            <div class="active-indicator"></div>
-
-            <div class="nav-icon">
-              <svg [lucideIcon]="item.icon" [size]="20"></svg>
-            </div>
-
-            @if (!collapsed()) {
-              <span class="nav-label">{{ item.label }}</span>
-            }
-
-            @if (collapsed()) {
-              <div class="nav-tooltip">
-                {{ item.label }}
+        @for (item of visibleNavItems(); track item.label) {
+          @if (item.children) {
+            <button class="nav-item group" (click)="toggleMenu(item)" [class.expanded]="item.expanded">
+              <div class="active-indicator" [class.active]="item.expanded"></div>
+              <div class="nav-icon">
+                <svg [lucideIcon]="item.icon" [size]="20"></svg>
+              </div>
+              @if (!collapsed()) {
+                <span class="nav-label" style="flex: 1; text-align: left;">{{ item.label }}</span>
+                <svg class="chevron" [style.transform]="item.expanded ? 'rotate(90deg)' : 'rotate(0)'" lucideChevronRight [size]="16" style="transition: transform 0.3s ease; color: #94a3b8;"></svg>
+              }
+              @if (collapsed()) {
+                <div class="nav-tooltip">{{ item.label }}</div>
+              }
+            </button>
+            @if (item.expanded && !collapsed()) {
+              <div class="nav-children">
+                @for (child of item.children; track child.route) {
+                  <a [routerLink]="child.route" routerLinkActive="active-link" class="nav-item nav-child">
+                    <div class="active-indicator"></div>
+                    <div class="nav-icon"><svg [lucideIcon]="child.icon" [size]="16"></svg></div>
+                    <span class="nav-label">{{ child.label }}</span>
+                  </a>
+                }
               </div>
             }
-          </a>
+          } @else {
+            <a [routerLink]="item.route" routerLinkActive="active-link" class="nav-item group">
+              <div class="active-indicator"></div>
+
+              <div class="nav-icon">
+                <svg [lucideIcon]="item.icon" [size]="20"></svg>
+              </div>
+
+              @if (!collapsed()) {
+                <span class="nav-label" style="flex: 1; text-align: left;">{{ item.label }}</span>
+              }
+
+              @if (collapsed()) {
+                <div class="nav-tooltip">
+                  {{ item.label }}
+                </div>
+              }
+            </a>
+          }
         }
       </div>
     </div>
