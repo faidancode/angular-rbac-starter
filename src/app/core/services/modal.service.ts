@@ -41,6 +41,7 @@ export class ModalService {
             }
 
             this.appRef.attachView(componentRef.hostView);
+            componentRef.changeDetectorRef.detectChanges();
 
             const domElem = (componentRef.hostView as any).rootNodes[0];
             document.body.appendChild(domElem);

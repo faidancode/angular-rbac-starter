@@ -1,4 +1,4 @@
-@use '../../../styles/abstract/variables' as *;
+@use '../../../styles/abstract/variables' as v;
 
 .roles-container {
   display: flex;
@@ -15,12 +15,12 @@
     h2 {
       font-size: 1.875rem;
       font-weight: 700;
-      color: $text-main;
+      color: v.$text-main;
       letter-spacing: -0.025em;
     }
 
     p {
-      color: $text-muted;
+      color: v.$text-muted;
       font-size: 0.875rem;
       margin-top: 0.25rem;
       font-weight: 500;
@@ -29,7 +29,7 @@
 }
 
 .primary-button {
-  background-color: $primary;
+  background-color: v.$primary;
   color: white;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
@@ -40,13 +40,13 @@
   gap: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: $transition-base;
-  box-shadow: 0 10px 15px -3px rgba($primary, 0.2);
+  transition: v.$transition-base;
+  box-shadow: 0 10px 15px -3px rgba(v.$primary, 0.2);
 
   &:hover {
-    background-color: $primary-light;
+    background-color: v.$primary-light;
     transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba($primary, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(v.$primary, 0.3);
   }
 }
 
@@ -66,17 +66,17 @@
   .role-card {
     background-color: white;
     padding: 1.5rem;
-    border-radius: $radius-xl;
-    border: 1px solid $subtle;
+    border-radius: v.$radius-xl;
+    border: 1px solid v.$subtle;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: $transition-base;
+    transition: v.$transition-base;
     display: flex;
     flex-direction: column;
 
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      border-color: $primary;
+      border-color: v.$primary;
     }
 
     .card-header {
@@ -88,13 +88,13 @@
       .role-info {
         h3 {
           font-weight: 700;
-          color: $text-main;
+          color: v.$text-main;
           font-size: 1.125rem;
         }
 
         .role-desc {
           font-size: 0.75rem;
-          color: $text-muted;
+          color: v.$text-muted;
           margin-top: 0.25rem;
           font-weight: 500;
         }
@@ -105,8 +105,8 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        background-color: rgba($primary, 0.05);
-        color: $primary;
+        background-color: rgba(v.$primary, 0.05);
+        color: v.$primary;
         padding: 0.25rem 0.625rem;
         border-radius: 9999px;
       }
@@ -123,9 +123,9 @@
         font-size: 10px;
         font-weight: 700;
         font-family: 'JetBrains Mono', monospace;
-        background-color: $surface-50;
-        border: 1px solid $subtle;
-        color: $text-muted;
+        background-color: v.$surface-50;
+        border: 1px solid v.$subtle;
+        color: v.$text-muted;
         padding: 0.25rem 0.5rem;
         border-radius: 0.5rem;
       }
@@ -136,7 +136,7 @@
       gap: 0.5rem;
       margin-top: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 1px solid $surface-100;
+      border-top: 1px solid v.$surface-100;
 
       .btn-action {
         flex: 1;
@@ -146,7 +146,7 @@
         border-radius: 0.75rem;
         border: none;
         cursor: pointer;
-        transition: $transition-base;
+        transition: v.$transition-base;
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
@@ -169,5 +169,17 @@
         }
       }
     }
+  }
+
+  .empty-state,
+  .loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: v.$radius-xl;
+    border: 1px dashed v.$surface-200;
+    color: v.$text-muted;
+    font-weight: 500;
   }
 }

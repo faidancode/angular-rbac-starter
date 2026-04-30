@@ -11,7 +11,8 @@ import { AbilityService } from '../services/ability.service';
 
 // --- helper parser ---
 function parsePermission(value: string): { action: string; subject: string } {
-  const [subject, action] = value.split('.');
+  const separator = value.includes(':') ? ':' : '.';
+  const [subject, action] = value.split(separator);
   return { action, subject };
 }
 

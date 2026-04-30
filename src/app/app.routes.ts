@@ -40,7 +40,29 @@ export const routes: Routes = [
       {
         path: 'roles',
         canActivate: [permissionGuard('Role:read')],
-        loadComponent: () => import('./pages/roles/roles.component').then((m) => m.RolesComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./pages/roles/roles.component').then((m) => m.RolesComponent),
+          },
+          {
+            path: 'new',
+            canActivate: [permissionGuard('Role:create')],
+            loadComponent: () =>
+              import('./pages/roles/components/role-form/role-form.component').then(
+                (m) => m.RoleFormComponent,
+              ),
+          },
+          {
+            path: ':id',
+            canActivate: [permissionGuard('Role:update')],
+            loadComponent: () =>
+              import('./pages/roles/components/role-form/role-form.component').then(
+                (m) => m.RoleFormComponent,
+              ),
+          },
+        ],
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
