@@ -1,15 +1,16 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { tap } from 'rxjs';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { tap } from 'rxjs/operators';
+import { ApiResponse, User, UserPayload } from '../types/api.types';
 import { BaseApiService } from './base-api.service';
-import { ApiResponse, Employee, EmployeePayload } from '../types/api.types';
+
 
 @Injectable({ providedIn: 'root' })
-export class EmployeeService {
+export class UserService {
   private api = inject(BaseApiService);
-  private readonly endpoint = '/employees';
+  private readonly endpoint = '/users';
 
   // --- State ---
-  private _employees = signal<Employee[]>([]);
+  private _users = signal<User[]>([]);
   private _loading = signal(false);
   private _total = signal(0);
   private _page = signal(1);
@@ -19,7 +20,7 @@ export class EmployeeService {
   private _hasNextPage = signal(false);
 
   // --- Public Signals (read-only) ---
-  readonly employees = this._employees.asReadonly();
+  readonly users = this._users.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly total = this._total.asReadonly();
   readonly page = this._page.asReadonly();
@@ -52,15 +53,13 @@ export class EmployeeService {
       search: search,
       sort: sort,
     };
-    console.log('Fetching with params:', params);
-
-    return this.api.get<ApiResponse<Employee[]>>(this.endpoint, params).pipe(
+    return this.api.get<ApiResponse<User[]>>(this.endpoint, params).pipe(
       tap({
         next: (res) => {
           if (append) {
-            this._employees.update((prev) => [...prev, ...res.data]);
+            this._users.update((prev) => [...prev, ...res.data]);
           } else {
-            this._employees.set(res.data);
+            this._users.set(res.data);
           }
           this._total.set(res.meta?.total ?? res.data.length);
           this._hasNextPage.set(res.meta?.hasNextPage ?? false);
@@ -85,26 +84,26 @@ export class EmployeeService {
   }
 
   getById(id: string) {
-    return this.api.get<ApiResponse<Employee>>(`${this.endpoint}/${id}`);
+    return this.api.get<ApiResponse<User>>(`${this.endpoint}/${id}`);
   }
 
-  create(payload: EmployeePayload) {
+  create(payload: UserPayload) {
     return this.api.post<any>(this.endpoint, payload).pipe(
       tap((res) => {
-        const newEmp = res?.data ?? res;
-        if (newEmp) {
-          this._employees.update((list) => [...list, newEmp]);
+        const newPos = res?.data ?? res;
+        if (newPos) {
+          this._users.update((list) => [...list, newPos]);
         }
       }),
     );
   }
 
-  update(id: string, payload: EmployeePayload) {
+  update(id: string, payload: UserPayload) {
     return this.api.patch<any>(`${this.endpoint}/${id}`, payload).pipe(
       tap((res) => {
         const updated = res?.data ?? res;
         if (updated) {
-          this._employees.update((list) => list.map((e) => (e.id === id ? updated : e)));
+          this._users.update((list) => list.map((p) => (p.id === id ? updated : p)));
         }
       }),
     );
@@ -113,7 +112,7 @@ export class EmployeeService {
   remove(id: string) {
     return this.api.delete<any>(`${this.endpoint}/${id}`).pipe(
       tap(() => {
-        this._employees.update((list) => list.filter((e) => e.id !== id));
+        this._users.update((list) => list.filter((p) => p.id !== id));
       }),
     );
   }

@@ -29,24 +29,9 @@ body {
 @import './styles/components/table';
 @import './styles/components/buttons';
 @import './styles/components/forms';
+@import './styles/components/layout';
 
-/* 3. Global UI Utils (Ganti utility tailwind yang sering dipakai) */
-.flex {
-  display: flex;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
+/* 3. Global UI Utils */
 .space-y-8 > * + * {
   margin-top: 2rem;
 }

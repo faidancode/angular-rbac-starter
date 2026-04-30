@@ -137,7 +137,7 @@ export class RolesComponent implements OnInit {
     });
 
     if (ok) {
-      this.roleService.deleteRole(id).subscribe({
+      this.roleService.remove(id).subscribe({
         next: () => {
           this.toastService.success('Role deleted successfully');
           this.fetchRoles();

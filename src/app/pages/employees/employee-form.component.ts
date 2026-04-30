@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Employee, EmployeePayload } from '../../core/types/api.types';
 import { EmployeeService } from '../../core/services/employee.service';
 import { PositionService } from '../../core/services/position.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-form',
@@ -17,11 +18,11 @@ export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   protected readonly positionService = inject(PositionService);
   private toast = inject(ToastService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  @Input() employee: Employee | null = null;
-
-  @Output() success = new EventEmitter<boolean>();
-  @Output() cancel = new EventEmitter<void>();
+  employee: Employee | null = null;
+  isEdit = false;
 
   errorMessage = signal<string | null>(null);
   loading = signal<boolean>(false);
@@ -48,18 +49,35 @@ export class EmployeeFormComponent implements OnInit {
       });
     }
 
-    if (this.employee) {
-      this.employeeForm.patchValue({
-        nip: this.employee.nip,
-        fullName: this.employee.fullName,
-        gender: this.employee.gender,
-        positionId: this.employee.positionId,
-        employeeStatus: this.employee.employeeStatus,
-        isActive: this.employee.isActive ?? true,
-        dateOfJoining: this.toDateInputValue(this.employee.dateOfJoining),
-        dateOfActivePosition: this.toDateInputValue(this.employee.dateOfActivePosition),
-      });
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id && id !== 'new') {
+        this.isEdit = true;
+        this.loading.set(true);
+        this.employeeService.getById(id).subscribe({
+          next: (res) => {
+            this.employee = res.data;
+            this.employeeForm.patchValue({
+              nip: this.employee.nip,
+              fullName: this.employee.fullName,
+              gender: this.employee.gender,
+              positionId: this.employee.positionId,
+              employeeStatus: this.employee.employeeStatus,
+              isActive: this.employee.isActive ?? true,
+              dateOfJoining: this.toDateInputValue(this.employee.dateOfJoining),
+              dateOfActivePosition: this.toDateInputValue(this.employee.dateOfActivePosition),
+            });
+            this.loading.set(false);
+          },
+          error: () => {
+            this.toast.error('Gagal memuat data employee');
+            this.onCancel();
+          }
+        });
+      } else {
+        this.isEdit = false;
+      }
+    });
 
     const nipControl = this.employeeForm.get('nip');
     nipControl?.valueChanges.subscribe(() => {
@@ -76,7 +94,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 
   onSave() {
@@ -98,8 +116,8 @@ export class EmployeeFormComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.loading.set(false);
-        this.success.emit(true);
         this.toast.success('Berhasil disimpan');
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       error: (err) => {
         this.loading.set(false);

@@ -1,0 +1,133 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-header__content">
+      <h2>Users</h2>
+      <p>User Management.</p>
+    </div>
+
+    <div class="page-header__actions">
+      <div class="search-field">
+        <svg lucideSearch class="search-icon" [size]="18"></svg>
+        <input
+          type="text"
+          placeholder="Search units..."
+          [ngModel]="service.searchQuery()"
+          (ngModelChange)="onSearch($event)"
+        />
+      </div>
+
+      <button *hasPermission="'User:create'" class="btn btn-primary" (click)="openForm()">
+        <svg lucidePlus [size]="18"></svg>
+        <span>Add User</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="hris-table-wrapper">
+    <div class="table-header-toolbar">
+      <div class="toolbar-left">
+        <span class="title">All Users</span>
+        <span class="subtitle"> Total {{ service.total() }} Users </span>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" (click)="toggleSort('name')">
+              Name <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('roleName')">
+              Email <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th class="sortable" (click)="toggleSort('createdAt')">
+              Created <svg lucideArrowUpDown [size]="14"></svg>
+            </th>
+            <th style="text-align: right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (service.loading()) {
+            @for (i of [1, 2, 3]; track i) {
+              <tr class="animate-pulse">
+                <td colspan="4">
+                  <div class="loading-skeleton"></div>
+                </td>
+              </tr>
+            }
+          } @else {
+            @for (data of service.users(); track data.id) {
+              <tr>
+                <td style="font-weight: 700">{{ data.name }}</td>
+                <td>{{ data.email }}</td>
+               
+                <td
+                  style="
+                    color: #64748b;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                  "
+                >
+                  {{ data.createdAt | date: 'dd MMM yyyy' }}
+                </td>
+                <td>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: flex-end;
+                      gap: 0.25rem;
+                    "
+                  >
+                    <button class="action-icon-btn" (click)="openForm(data)">
+                      <svg lucidePencil [size]="16"></svg>
+                    </button>
+                    <button (click)="onDelete(data.id)" class="action-icon-btn delete">
+                      <svg lucideTrash2 [size]="16"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-toolbar">
+      <div>
+        <span class="page-info">Per page</span>
+        <select
+          [ngModel]="service.limit()"
+          (ngModelChange)="onLimitChange($event)"
+          class="limit-select"
+          id="limit-select"
+        >
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+
+      <div class="page-controls">
+        <button
+          class="page-btn-minimal"
+          [disabled]="service.page() === 1"
+          (click)="onPageChange(service.page() - 1)"
+        >
+          <svg lucideChevronLeft [size]="18"></svg>
+        </button>
+        <span class="page-info"> Page {{ service.page() }} </span>
+        <button
+          class="page-btn-minimal"
+          [disabled]="!service.hasMore()"
+          (click)="onPageChange(service.page() + 1)"
+        >
+          <svg lucideChevronRight [size]="18"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

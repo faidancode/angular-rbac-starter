@@ -21,8 +21,25 @@ export const routes: Routes = [
       {
         path: 'employees',
         canActivate: [permissionGuard('Employee:read')],
-        loadComponent: () =>
-          import('./pages/employees/employees.component').then((m) => m.EmployeesComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./pages/employees/employees.component').then((m) => m.EmployeesComponent),
+          },
+          {
+            path: 'new',
+            canActivate: [permissionGuard('Employee:create')],
+            loadComponent: () =>
+              import('./pages/employees/employee-form.component').then((m) => m.EmployeeFormComponent),
+          },
+          {
+            path: ':id',
+            canActivate: [permissionGuard('Employee:update')],
+            loadComponent: () =>
+              import('./pages/employees/employee-form.component').then((m) => m.EmployeeFormComponent),
+          },
+        ],
       },
       {
         path: 'departments',
@@ -36,7 +53,29 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/positions/positions.component').then((m) => m.PositionComponent),
       },
-
+      {
+        path: 'users',
+        canActivate: [permissionGuard('User:read')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./pages/users/users.component').then((m) => m.UsersComponent),
+          },
+          {
+            path: 'new',
+            canActivate: [permissionGuard('User:create')],
+            loadComponent: () =>
+              import('./pages/users/user-form.component').then((m) => m.UserFormComponent),
+          },
+          {
+            path: ':id',
+            canActivate: [permissionGuard('User:update')],
+            loadComponent: () =>
+              import('./pages/users/user-form.component').then((m) => m.UserFormComponent),
+          },
+        ],
+      },
       {
         path: 'roles',
         canActivate: [permissionGuard('Role:read')],

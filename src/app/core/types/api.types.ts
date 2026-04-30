@@ -60,3 +60,22 @@ export interface EmployeePayload {
   dateOfJoining?: string;
   dateOfActivePosition?: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  roleId: string;
+  roleName: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserPayload {
+  name: string;
+  email: string;
+  roleId: string;
+  password?: string;
+  isActive?: boolean;
+}
