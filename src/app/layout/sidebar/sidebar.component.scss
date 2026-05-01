@@ -140,7 +140,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     .nav-icon,
     .nav-label {
-      color: white;
+      color: $sidebar-accent;
     }
 
     .nav-tooltip {
@@ -175,12 +175,12 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover .nav-label--child,
     &.active-link .nav-label--child {
-      color: white;
+      color: $sidebar-accent;
     }
 
     &:hover::before,
     &.active-link::before {
-      background: white;
+      background: $sidebar-accent;
     }
   }
 

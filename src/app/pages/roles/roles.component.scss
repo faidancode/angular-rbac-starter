@@ -1,102 +1,47 @@
 @use '../../../styles/abstract/variables' as v;
 
-.roles-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.roles-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .header-content {
-    h2 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: v.$text-main;
-      letter-spacing: -0.025em;
-    }
-
-    p {
-      color: v.$text-muted;
-      font-size: 0.875rem;
-      margin-top: 0.25rem;
-      font-weight: 500;
-    }
-  }
-}
-
-.primary-button {
-  background-color: v.$primary;
-  color: white;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: v.$transition-base;
-  box-shadow: 0 10px 15px -3px rgba(v.$primary, 0.2);
-
-  &:hover {
-    background-color: v.$primary-light;
-    transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(v.$primary, 0.3);
-  }
-}
-
 .roles-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
 
   .role-card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: v.$radius-xl;
+    background-color: v.$white;
+    padding: 2rem;
     border: 1px solid v.$subtle;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: v.$transition-base;
+    border-radius: 0 !important; // Sharp
     display: flex;
     flex-direction: column;
+    transition: all 0.3s ease;
+    position: relative;
 
     &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
       border-color: v.$primary;
+      box-shadow: 15px 15px 0px rgba(v.$primary, 0.05);
+      transform: translate(-4px, -4px);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
 
       .role-info {
         h3 {
-          font-weight: 700;
-          color: v.$text-main;
-          font-size: 1.125rem;
+          font-weight: 900;
+          color: v.$primary;
+          font-size: 1.25rem;
+          text-transform: uppercase;
+          letter-spacing: -0.01em;
         }
 
         .role-desc {
-          font-size: 0.75rem;
+          font-size: 0.813rem;
           color: v.$text-muted;
-          margin-top: 0.25rem;
-          font-weight: 500;
+          margin-top: 0.5rem;
+          font-weight: 600;
+          line-height: 1.4;
         }
       }
 
@@ -104,82 +49,83 @@
         font-size: 10px;
         font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        background-color: rgba(v.$primary, 0.05);
-        color: v.$primary;
-        padding: 0.25rem 0.625rem;
-        border-radius: 9999px;
+        color: v.$white;
+        background-color: v.$primary;
+        padding: 0.2rem 0.5rem;
       }
     }
 
     .permissions-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.375rem;
+      gap: 0.5rem;
       margin-top: 1rem;
       flex: 1;
 
       .permission-tag {
         font-size: 10px;
         font-weight: 700;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'JetBrains Mono', monospace; // Technical look
         background-color: v.$surface-50;
         border: 1px solid v.$subtle;
-        color: v.$text-muted;
+        color: v.$text-main;
         padding: 0.25rem 0.5rem;
-        border-radius: 0.5rem;
+
+        &.more-tag {
+          background-color: v.$white;
+          border-style: dashed;
+          color: v.$text-muted;
+        }
       }
     }
 
     .card-footer {
       display: flex;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid v.$surface-100;
+      gap: .5rem; // Garis pemisah antar button
+      margin-top: 2rem;
 
       .btn-action {
         flex: 1;
-        font-size: 0.75rem;
-        font-weight: 700;
-        padding: 0.5rem;
-        border-radius: 0.75rem;
-        border: none;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 0.75rem;
+        border: 1px solid v.$subtle;
         cursor: pointer;
-        transition: v.$transition-base;
+        background-color: v.$white;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.1em;
+        transition: all 0.2s ease;
 
         &.edit {
-          background-color: #f0f9ff;
-          color: #0284c7;
-
+          color: v.$primary;
           &:hover {
-            background-color: #e0f2fe;
+            background-color: v.$primary;
+            color: v.$white;
           }
         }
 
         &.delete {
-          background-color: #fef2f2;
           color: #dc2626;
-
           &:hover {
-            background-color: #fee2e2;
+            background-color: #dc2626;
+            color: v.$white;
           }
         }
       }
     }
   }
+}
 
-  .empty-state,
-  .loading-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background: white;
-    border-radius: v.$radius-xl;
-    border: 1px dashed v.$surface-200;
-    color: v.$text-muted;
-    font-weight: 500;
-  }
+// Global States
+.empty-state,
+.loading-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 5rem;
+  border: 2px dashed v.$subtle;
+  color: v.$text-muted;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
 }
