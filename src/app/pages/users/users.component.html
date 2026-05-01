@@ -24,13 +24,6 @@
   </header>
 
   <div class="hris-table-wrapper">
-    <div class="table-header-toolbar">
-      <div class="toolbar-left">
-        <span class="title">All Users</span>
-        <span class="subtitle"> Total {{ service.total() }} Users </span>
-      </div>
-    </div>
-
     <div class="table-responsive">
       <table>
         <thead>
@@ -61,7 +54,7 @@
               <tr>
                 <td style="font-weight: 700">{{ data.name }}</td>
                 <td>{{ data.email }}</td>
-               
+
                 <td
                   style="
                     color: #64748b;
@@ -97,13 +90,12 @@
     </div>
 
     <div class="pagination-toolbar">
-      <div>
-        <span class="page-info">Per page</span>
+      <div class="flex items-center">
+        <span class="page-info">Show</span>
         <select
           [ngModel]="service.limit()"
           (ngModelChange)="onLimitChange($event)"
           class="limit-select"
-          id="limit-select"
         >
           <option [value]="10">10</option>
           <option [value]="25">25</option>
@@ -111,22 +103,24 @@
         </select>
       </div>
 
-      <div class="page-controls">
-        <button
-          class="page-btn-minimal"
-          [disabled]="service.page() === 1"
-          (click)="onPageChange(service.page() - 1)"
-        >
-          <svg lucideChevronLeft [size]="18"></svg>
-        </button>
-        <span class="page-info"> Page {{ service.page() }} </span>
-        <button
-          class="page-btn-minimal"
-          [disabled]="!service.hasMore()"
-          (click)="onPageChange(service.page() + 1)"
-        >
-          <svg lucideChevronRight [size]="18"></svg>
-        </button>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <button
+            class="page-btn-minimal"
+            [disabled]="service.page() === 1"
+            (click)="onPageChange(service.page() - 1)"
+          >
+            <svg lucideChevronLeft [size]="16"></svg>
+          </button>
+          <span class="page-info">Page {{ service.page() }}</span>
+          <button
+            class="page-btn-minimal"
+            [disabled]="service.loading() || !service.hasMore()"
+            (click)="onPageChange(service.page() + 1)"
+          >
+            <svg lucideChevronRight [size]="16"></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

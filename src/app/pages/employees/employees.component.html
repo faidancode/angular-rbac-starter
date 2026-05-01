@@ -23,43 +23,29 @@
     </div>
   </header>
 
-  <div class="hris-table-wrapper">
-    <div class="table-header-toolbar">
-      <div class="toolbar-left">
-        <span class="title">All Employees</span>
-        <span class="subtitle"> Total {{ service.total() }} Employees </span>
-      </div>
-    </div>
-
+  <div class="hris-table-wrapper animate-sharp">
+    <!-- TABLE -->
     <div class="table-responsive">
       <table>
         <thead>
           <tr>
             <th class="sortable" (click)="toggleSort('fullName')">
-              Employee <svg lucideArrowUpDown [size]="14"></svg>
+              Identification
+              <svg lucideArrowUpDown [size]="12" class="ml-2 inline opacity-30"></svg>
             </th>
-            <th class="sortable" (click)="toggleSort('gender')">
-              Gender <svg lucideArrowUpDown [size]="14"></svg>
-            </th>
-            <th class="sortable" (click)="toggleSort('positionName')">
-              Position <svg lucideArrowUpDown [size]="14"></svg>
-            </th>
-            <th class="sortable" (click)="toggleSort('employeeStatus')">
-              Status <svg lucideArrowUpDown [size]="14"></svg>
-            </th>
-            <th class="sortable" (click)="toggleSort('createdAt')">
-              Created <svg lucideArrowUpDown [size]="14"></svg>
-            </th>
-            <th class="actions-head">Actions</th>
+            <th>Gender</th>
+            <th>Position</th>
+            <th>Status</th>
+            <th>Joined Date</th>
+            <th class="text-right">Manage</th>
           </tr>
         </thead>
+
         <tbody>
           @if (service.loading()) {
-            @for (i of [1, 2, 3]; track i) {
-              <tr class="animate-pulse">
-                <td colspan="6">
-                  <div class="loading-skeleton"></div>
-                </td>
+            @for (i of [1, 2, 3, 4, 5]; track i) {
+              <tr>
+                <td colspan="6"><div class="loading-skeleton h-12 w-full bg-slate-50"></div></td>
               </tr>
             }
           } @else {
@@ -74,8 +60,8 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ displayGender(employee) }}</td>
-                <td>{{ employee.positionName }}</td>
+                <td class="uppercase text-xs font-bold">{{ displayGender(employee) }}</td>
+                <td class="font-bold">{{ employee.positionName }}</td>
                 <td>
                   <span
                     class="hris-badge"
@@ -84,24 +70,35 @@
                     {{ displayStatus(employee) }}
                   </span>
                 </td>
-                <td class="muted-cell">
-                  {{ employee.createdAt | date: 'dd MMM yyyy' }}
+                <td class="text-slate-400 font-bold text-xs italic">
+                  {{ employee.createdAt | date: 'dd/MM/yyyy' }}
                 </td>
-                <td class="actions-cell">
-                  <div class="action-row">
-                    <button *hasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)">
-                      <svg lucidePencil [size]="16"></svg>
+                <td>
+                  <div class="flex justify-end gap-2">
+                    <button
+                      *hasPermission="'Employee:update'"
+                      class="action-icon-btn"
+                      (click)="openForm(employee)"
+                    >
+                      <svg lucidePencil [size]="14"></svg>
                     </button>
-                    <button *hasPermission="'Employee:delete'" (click)="onDelete(employee.id)" class="action-icon-btn delete">
-                      <svg lucideTrash2 [size]="16"></svg>
+                    <button
+                      *hasPermission="'Employee:delete'"
+                      (click)="onDelete(employee.id)"
+                      class="action-icon-btn delete"
+                    >
+                      <svg lucideTrash2 [size]="14"></svg>
                     </button>
                   </div>
                 </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="6">
-                  <div class="empty-state">No employees found matching your search.</div>
+                <td
+                  colspan="6"
+                  class="p-12 text-center text-slate-400 font-bold uppercase tracking-widest text-xs"
+                >
+                  No matching records found.
                 </td>
               </tr>
             }
@@ -110,14 +107,14 @@
       </table>
     </div>
 
+    <!-- PAGINATION -->
     <div class="pagination-toolbar">
-      <div>
-        <span class="page-info">Per page</span>
+      <div class="flex items-center">
+        <span class="page-info">Show</span>
         <select
           [ngModel]="service.limit()"
           (ngModelChange)="onLimitChange($event)"
           class="limit-select"
-          id="limit-select"
         >
           <option [value]="10">10</option>
           <option [value]="25">25</option>
@@ -125,23 +122,24 @@
         </select>
       </div>
 
-      <div class="page-controls">
-        <button
-          class="page-btn-minimal"
-          [disabled]="service.page() === 1"
-          (click)="onPageChange(service.page() - 1)"
-        >
-          <svg lucideChevronLeft [size]="18"></svg>
-        </button>
-        <span class="page-info"> Page {{ service.page() }} </span>
-        <button
-          class="page-btn-minimal"
-          [disabled]="service.loading() || !service.hasMore()"
-          aria-label="Next page"
-          (click)="onPageChange(service.page() + 1)"
-        >
-          <svg lucideChevronRight [size]="18"></svg>
-        </button>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <button
+            class="page-btn-minimal"
+            [disabled]="service.page() === 1"
+            (click)="onPageChange(service.page() - 1)"
+          >
+            <svg lucideChevronLeft [size]="16"></svg>
+          </button>
+          <span class="page-info">Page {{ service.page() }}</span>
+          <button
+            class="page-btn-minimal"
+            [disabled]="service.loading() || !service.hasMore()"
+            (click)="onPageChange(service.page() + 1)"
+          >
+            <svg lucideChevronRight [size]="16"></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

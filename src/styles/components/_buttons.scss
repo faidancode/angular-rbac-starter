@@ -1,76 +1,87 @@
-@use '../abstract/variables' as vars;
+@use '../abstract/variables' as v;
 
-.primary-button {
-    background-color: vars.$primary;
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: v.$transition-base;
+  border: 1px solid v.$subtle;
+  background: white;
+  color: v.$primary;
+  box-shadow: 6px 6px 0px v.$subtle;
+
+  &:hover {
+    background: v.$surface-50;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &-primary {
+    background: v.$primary;
     color: white;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.75rem;
-    font-size: vars.$text-sm;
-    font-weight: vars.$weight-bold;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    cursor: pointer;
-    transition: vars.$transition-base;
+    border-color: v.$primary;
 
     &:hover {
-        background-color: vars.$primary-light;
-        transform: translateY(-1px);
-    }
-
-    &:active {
-        transform: translateY(0);
-    }
-}
-
-.action-icon-btn {
-    width: 2.25rem;
-    height: 2.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    color: vars.$text-muted;
-    transition: vars.$transition-base;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-
-    &:hover {
-        background-color: vars.$surface-100;
-        color: vars.$primary;
-    }
-
-    &:active {
-        transform: scale(0.95);
-    }
-
-    &.delete:hover {
-        background-color: vars.$danger-bg;
-        color: #dc2626;
-    }
-}
-
-.page-btn-minimal {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    border: 1px solid vars.$subtle;
-    background-color: vars.$white;
-    color: vars.$primary;
-    cursor: pointer;
-    transition: vars.$transition-base;
-
-    &:hover:not(:disabled) {
-        background-color: vars.$surface-50;
+      background: v.$primary-light;
     }
 
     &:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
+      opacity: 0.5;
+      cursor: not-allowed;
     }
+  }
+}
+
+.action-icon-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  color: v.$text-muted;
+  transition: v.$transition-base;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background-color: v.$surface-100;
+    color: v.$primary;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.delete:hover {
+    background-color: v.$danger-bg;
+    color: #dc2626;
+  }
+}
+
+.page-btn-minimal {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.1rem;
+  border: 1px solid v.$subtle;
+  background-color: v.$white;
+  color: v.$primary;
+  cursor: pointer;
+  transition: v.$transition-base;
+
+  &:hover:not(:disabled) {
+    background-color: v.$surface-50;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 }
