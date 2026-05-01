@@ -10,6 +10,7 @@ import {
   LucidePlane,
   LucidePlus,
   LucideShieldCheck,
+  LucideTimer,
   LucideUserPlus,
   LucideUsers,
 } from '@lucide/angular';
@@ -44,7 +45,7 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Total Active Employees',
         value: summary?.totalActiveEmployees?.toLocaleString() || '0',
-        change: 'Active',
+        change: 'Total',
         positive: true,
         icon: LucideUsers,
         color: 'bg-indigo-50 text-indigo-600',
@@ -78,8 +79,8 @@ export class DashboardComponent implements OnInit {
         value: summary?.totalContractEmployees?.toLocaleString() || '0',
         change: 'Status',
         positive: true,
-        icon: LucideCircleCheck,
-        color: 'bg-indigo-50 text-indigo-600',
+        icon: LucideTimer,
+        color: 'bg-amber-50 text-amber-600',
       },
     ];
   });

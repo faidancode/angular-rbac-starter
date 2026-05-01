@@ -21,6 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@import './styles/abstract/utilities';
 @import './styles/pages/page';
 @import './styles/components/modal';
 @import './styles/components/confirm-modal';

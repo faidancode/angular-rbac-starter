@@ -1,0 +1,50 @@
+@use './variables' as v;
+
+// Background Utilities
+.bg-primary {
+  background-color: v.$primary !important;
+}
+.bg-secondary {
+  background-color: v.$secondary !important;
+}
+.bg-surface-50 {
+  background-color: v.$surface-50 !important;
+}
+
+// Contextual Colors (Elegant Palettes)
+.bg-indigo-50 {
+  background-color: #f8faff !important;
+}
+.text-indigo-600 { 
+  color: #312e81 !important;
+}
+
+.bg-emerald-50 {
+  background-color: #f7fee7 !important;
+}
+.text-emerald-600 {
+  color: #065f46 !important;
+}
+
+.bg-amber-50 {
+  background-color: #fffbeb !important;
+}
+.text-amber-600 {
+  color: #92400e !important;
+}
+
+// Animation
+@keyframes sharpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-sharp {
+  animation: sharpFadeIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
