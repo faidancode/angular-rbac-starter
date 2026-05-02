@@ -22,8 +22,14 @@
 
           @if (isDropdownOpen()) {
             <div class="profile-dropdown">
-              <button class="dropdown-item">Profile</button>
-              <button class="dropdown-item text-danger" (click)="logout()">Logout</button>
+              <button class="dropdown-item">
+                 <svg lucideUser [size]="20"></svg>
+                 Profile
+                </button>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                 <svg lucideLogOut [size]="20"></svg>
+                Logout
+              </button>
             </div>
           }
         </div>

@@ -1,13 +1,13 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LucideMenu } from '@lucide/angular';
+import { LucideLogOut, LucideMenu, LucideUser } from '@lucide/angular';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, LucideMenu],
+  imports: [RouterOutlet, SidebarComponent, LucideMenu, LucideUser, LucideLogOut],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
 })
