@@ -43,7 +43,7 @@ export class EmployeeFormComponent implements OnInit {
     if (!this.positionService.positions().length && !this.positionService.loading()) {
       const previousLimit = this.positionService.limit();
 
-      this.positionService.fetchAll(1, false, '', 1000).subscribe({
+      this.positionService.fetchAll(1, false, '', 100).subscribe({
         next: () => this.positionService.updateLimit(previousLimit),
         error: () => this.positionService.updateLimit(previousLimit),
       });

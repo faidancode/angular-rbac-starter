@@ -57,7 +57,7 @@ export class UserFormComponent implements OnInit {
     if (!this.roleService.roles().length && !this.roleService.loading()) {
       const previousLimit = this.roleService.limit();
 
-      this.roleService.fetchAll(1, false, '', 1000).subscribe({
+      this.roleService.fetchAll(1, false, '', 100).subscribe({
         next: () => this.roleService.updateLimit(previousLimit),
         error: () => this.roleService.updateLimit(previousLimit),
       });

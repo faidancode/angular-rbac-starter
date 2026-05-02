@@ -45,7 +45,7 @@ export class PositionFormComponent implements OnInit {
     if (!this.departmentService.departments().length && !this.departmentService.loading()) {
       const previousLimit = this.departmentService.limit();
 
-      this.departmentService.fetchAll(1, false, '', 1000).subscribe({
+      this.departmentService.fetchAll(1, false, '', 100).subscribe({
         next: () => this.departmentService.updateLimit(previousLimit),
         error: () => this.departmentService.updateLimit(previousLimit),
       });
