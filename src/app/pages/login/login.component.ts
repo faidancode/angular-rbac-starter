@@ -17,7 +17,7 @@ import {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, LucideLayoutGrid, LucideZap, LucideCircleAlert, LucideMail, LucideLock, LucideArrowRight, LucideShieldCheck],
+  imports: [FormsModule, LucideLayoutGrid, LucideZap, LucideCircleAlert, LucideMail, LucideLock, LucideArrowRight],
   template: `
     <div class="login-container">
       <div class="login-sidebar">

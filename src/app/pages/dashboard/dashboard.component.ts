@@ -27,7 +27,7 @@ interface StatCard {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LucideDynamicIcon, LucideDownload, LucidePlus],
+  imports: [CommonModule, LucideDynamicIcon],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })

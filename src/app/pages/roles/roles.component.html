@@ -22,17 +22,17 @@
             <h3>{{ role.name }}</h3>
             <p class="role-desc">{{ role.description }}</p>
           </div>
-          <span class="user-count-badge"> {{ role.permissions?.length ?? 0 }} perms </span>
+          <span class="user-count-badge"> {{ role.permissions.length }} perms </span>
         </div>
 
         <div class="permissions-list">
-          @for (perm of role.permissions ?? []; track perm.id) {
+          @for (perm of role.permissions; track perm.id) {
             <span class="permission-tag" *ngIf="$index < 8">
               {{ perm.subject }}:{{ perm.action }}
             </span>
           }
-          <span class="permission-tag more-tag" *ngIf="(role.permissions?.length ?? 0) > 8">
-            +{{ (role.permissions?.length ?? 0) - 8 }} more
+          <span class="permission-tag more-tag" *ngIf="role.permissions.length > 8">
+            +{{ role.permissions.length - 8 }} more
           </span>
         </div>
 

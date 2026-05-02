@@ -1,13 +1,13 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LucideSearch, LucideMenu } from '@lucide/angular';
+import { LucideMenu } from '@lucide/angular';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, LucideSearch, LucideMenu],
+  imports: [RouterOutlet, SidebarComponent, LucideMenu],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
 })
@@ -27,7 +27,6 @@ export class ShellComponent {
         .toUpperCase() ?? 'HR',
   );
 
-  protected readonly LucideSearch = LucideSearch;
   protected readonly LucideMenu = LucideMenu;
 
   toggleDropdown() {

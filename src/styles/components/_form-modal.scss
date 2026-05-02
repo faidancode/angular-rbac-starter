@@ -1,105 +1,57 @@
 @use '../abstract/variables' as v;
 
 .form-modal {
-  .form-group {
-    margin-bottom: 1.5rem;
+  .modal {
+    max-width: 380px;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .modal-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: v.$danger-bg;
+    color: v.$danger;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
 
-    label {
-      font-size: 10px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: v.$text-muted;
-    }
-
-    input[type='text'],
-    input[type='number'],
-    input[type='email'],
-    input[type='password'],
-    input[type='date'],
-    select {
-      width: 100%;
-      padding: 0.875rem 1rem;
-      border-radius: v.$radius-base;
-      border: 1px solid v.$subtle;
-      font-family: v.$font-sans;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: v.$primary;
-      transition: v.$transition-base;
-
-      &::placeholder {
-        color: #cbd5e1;
-        font-weight: 500;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: v.$primary;
-        box-shadow: 0 0 0 4px rgba(v.$primary, 0.05);
-      }
-    }
-
-    .checkbox-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      input[type='checkbox'] {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-      }
-    }
-
-    &--inline {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      background: v.$surface-50;
-      border-radius: v.$radius-base;
-    }
-
-    &--error {
-      input {
-        border-color: #ef4444;
-        background-color: #fef2f2;
-      }
+    .lucide {
+      stroke-width: 2px;
     }
   }
 
-  .form-error {
-    font-size: 11px;
-    font-weight: 700;
-    color: #ef4444;
-    margin-top: 0.25rem;
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: v.$primary;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
   }
 
-  .form-banner--error {
-    padding: 1rem;
-    background: #fef2f2;
-    border-radius: v.$radius-xl;
-    color: #b91c1c;
+  p {
     font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    border: 1px solid #fee2e2;
+    color: v.$text-muted;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-weight: 500;
   }
 
-  .form-section {
-    margin-bottom: 1.5rem;
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
 
-    &-title {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: v.$primary;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid v.$subtle;
+    .btn-danger {
+      background-color: #ef4444;
+      color: v.$white;
+      border-color: #ef4444;
+
+      &:hover {
+        background-color: #dc2626;
+      }
     }
   }
 }

@@ -1,6 +1,17 @@
-@import './styles/abstract/variables';
+/* 1. Tokens & Utilities (The Foundation) */
+@use './styles/abstract/variables' as *; // Menggantikan import colors, typography, spacing, transition
+@use './styles/abstract/utilities' as *;
 
-/* 1. Reset & Global Base */
+@use './styles/pages/page' as *;
+@use './styles/components/layout' as *;
+@use './styles/components/table' as *;
+@use './styles/components/buttons' as *;
+@use './styles/components/forms' as *;
+@use './styles/components/modal' as *;
+@use './styles/components/confirm-modal' as *;
+@use './styles/components/form-modal' as *;
+
+/* 2. Reset & Global Base */
 * {
   margin: 0;
   padding: 0;
@@ -21,25 +32,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-@import './styles/abstract/utilities';
-@import './styles/pages/page';
-@import './styles/components/modal';
-@import './styles/components/confirm-modal';
-@import './styles/components/form-modal';
-/* 2. Import Modular Components */
-@import './styles/components/table';
-@import './styles/components/buttons';
-@import './styles/components/forms';
-@import './styles/components/layout';
-
 /* 3. Global UI Utils */
 .space-y-8 > * + * {
   margin-top: 2rem;
 }
 
-/* Lucide Icon Standard */
 .lucide {
   stroke-width: 1.5px;
   display: inline-block;
   vertical-align: middle;
 }
+

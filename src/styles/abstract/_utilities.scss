@@ -1,36 +1,36 @@
-@use './variables' as v;
+@use 'tokens/colors' as c;
 
 // Background Utilities
 .bg-primary {
-  background-color: v.$primary !important;
+  background-color: c.$primary !important;
 }
 .bg-secondary {
-  background-color: v.$secondary !important;
+  background-color: c.$secondary !important;
 }
 .bg-surface-50 {
-  background-color: v.$surface-50 !important;
+  background-color: c.$surface-50 !important;
 }
 
-// Contextual Colors (Elegant Palettes)
+// Contextual Utilities (Menggunakan variabel dari _colors)
 .bg-indigo-50 {
-  background-color: #f8faff !important;
+  background-color: c.$indigo-50 !important;
 }
-.text-indigo-600 { 
-  color: #312e81 !important;
+.text-indigo-600 {
+  color: c.$indigo-600 !important;
 }
 
 .bg-emerald-50 {
-  background-color: #f7fee7 !important;
+  background-color: c.$emerald-50 !important;
 }
 .text-emerald-600 {
-  color: #065f46 !important;
+  color: c.$emerald-600 !important;
 }
 
 .bg-amber-50 {
-  background-color: #fffbeb !important;
+  background-color: c.$amber-50 !important;
 }
 .text-amber-600 {
-  color: #92400e !important;
+  color: c.$amber-600 !important;
 }
 
 // Animation
@@ -47,4 +47,11 @@
 
 .animate-sharp {
   animation: sharpFadeIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+// Hint: Tambahkan staggered delay untuk mendukung konsep "staggered reveal" Anda
+@for $i from 1 through 10 {
+  .delay-#{$i} {
+    animation-delay: #{$i * 0.1}s;
+  }
 }

@@ -7,7 +7,7 @@
   cursor: pointer;
   transition: v.$transition-base;
   border: 1px solid v.$subtle;
-  background: white;
+  background: v.$white;
   color: v.$primary;
   box-shadow: 6px 6px 0px v.$subtle;
 
@@ -21,7 +21,7 @@
 
   &-primary {
     background: v.$primary;
-    color: white;
+    color: v.$white;
     border-color: v.$primary;
 
     &:hover {

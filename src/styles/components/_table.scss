@@ -3,20 +3,20 @@
 .hris-table-wrapper {
   background-color: v.$white;
   border: 1px solid v.$subtle;
-  border-radius: 0 !important; // Tegas tanpa radius
-  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.03); // Soft elevation
-  margin-top: .5rem;
+  border-radius: 0 !important;
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.03);
+  margin-top: v.$space-2;
 
   .table-header-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2rem;
-    border-bottom: 2px solid v.$primary; // Garis header yang dominan
+    padding: v.$space-8;
+    border-bottom: 2px solid v.$primary;
 
     .toolbar-left {
       .title {
-        font-size: 1.25rem;
+        font-size: v.$text-xl;
         font-weight: 900;
         color: v.$primary;
         text-transform: uppercase;
@@ -29,7 +29,7 @@
         text-transform: uppercase;
         letter-spacing: 0.2em;
         color: v.$text-muted;
-        margin-top: 0.25rem;
+        margin-top: v.$space-1;
         display: block;
       }
     }
@@ -52,7 +52,8 @@
 
       &.sortable {
         cursor: pointer;
-        transition: color 0.2s ease;
+        transition: color v.$transition-fast;
+
         &:hover {
           color: v.$primary;
         }
@@ -61,7 +62,7 @@
 
     tbody tr {
       border-bottom: 1px solid v.$subtle;
-      transition: all 0.2s ease;
+      transition: background-color v.$transition-fast;
 
       &:hover {
         background-color: v.$surface-50;
@@ -69,7 +70,7 @@
 
       td {
         padding: 1.25rem 1.5rem;
-        font-size: 0.875rem;
+        font-size: v.$text-sm;
         font-weight: 600;
         color: v.$primary;
         vertical-align: middle;
@@ -88,12 +89,12 @@
       height: 2.5rem;
       background: v.$primary;
       color: v.$white;
-      border-radius: 0; // Sharp avatar
+      border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 0.75rem;
+      font-size: v.$text-xs;
     }
 
     .details {
@@ -113,7 +114,7 @@
 
   // Pagination & Footer
   .pagination-toolbar {
-    padding: 1rem;
+    padding: v.$space-4;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -131,43 +132,24 @@
     .limit-select {
       border: 1px solid v.$subtle;
       border-radius: 0;
-      padding: 0.5rem;
+      padding: v.$space-2;
       font-weight: 700;
-      margin-left: 0.5rem;
+      margin-left: v.$space-2;
       outline: none;
-      &:focus {
-        border-color: v.$primary;
-      }
-    }
 
-    .page-btn-minimal {
-      background: none;
-      border: 1px solid v.$subtle;
-      padding: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: all 0.2s ease;
-      &:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-      &:not(:disabled):hover {
-        background: v.$primary;
-        color: v.$white;
+      &:focus {
         border-color: v.$primary;
       }
     }
   }
 }
 
-// Badge Refined
 .hris-badge {
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   padding: 0.35rem 0.75rem;
-  border-radius: 0; // Sharp badge
+  border-radius: 0;
   display: inline-block;
 
   &.badge-success {
@@ -179,26 +161,6 @@
     background: #fef2f2;
     color: #dc2626;
     border: 1px solid #fecaca;
-  }
-}
-
-// Action Buttons
-.action-icon-btn {
-  background: none;
-  border: 1px solid v.$subtle;
-  padding: 0.4rem;
-  cursor: pointer;
-  color: v.$text-muted;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: v.$primary;
-    color: v.$primary;
-  }
-
-  &.delete:hover {
-    border-color: #ef4444;
-    color: #ef4444;
   }
 }
 
