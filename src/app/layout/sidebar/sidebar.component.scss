@@ -77,12 +77,14 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   justify-content: center;
   background: linear-gradient(135deg, $sidebar-accent, #ff7849);
   box-shadow: 0 12px 24px rgba(232, 78, 27, 0.24);
-  transition: transform 300ms ease, box-shadow 300ms ease;
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
 }
 
 .brand-text {
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 700;
   font-style: italic;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -102,7 +104,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0 1rem;
   margin-bottom: 1.25rem;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: $sidebar-text;
@@ -129,6 +131,10 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   font-family: inherit;
   transition: background-color $transition-speed ease;
 
+  .nav-label {
+    font-weight: 600;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 0.05);
 
@@ -146,11 +152,10 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   &.active-link {
     background: rgba(255, 255, 255, 0.06);
-
+    .nav-label
     .nav-icon,
-    .nav-label,
     .chevron {
-      color: white;
+      color: $sidebar-accent;
     }
   }
 
@@ -160,7 +165,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     gap: 0.5rem;
 
     .nav-label--child {
-      font-size: 0.8125rem;
+      font-size: 0.875rem;
       color: $sidebar-text-strong;
     }
 
@@ -178,7 +183,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover .nav-label--child,
     &.active-link .nav-label--child {
-      color: white;
+      color: $sidebar-accent;
     }
 
     &:hover::before,
@@ -211,7 +216,9 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 .chevron {
   flex-shrink: 0;
   color: $sidebar-text;
-  transition: transform $transition-speed ease, color $transition-speed ease;
+  transition:
+    transform $transition-speed ease,
+    color $transition-speed ease;
 }
 
 .active-indicator {
@@ -224,7 +231,9 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   background-color: $sidebar-accent;
   opacity: 0;
   transform: translateY(-50%);
-  transition: height $transition-speed ease, opacity $transition-speed ease;
+  transition:
+    height $transition-speed ease,
+    opacity $transition-speed ease;
 
   &.active {
     height: 70%;
@@ -250,11 +259,13 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   opacity: 0;
   transform: translateX(0.5rem);
-  transition: opacity $transition-speed ease, transform $transition-speed ease;
+  transition:
+    opacity $transition-speed ease,
+    transform $transition-speed ease;
   background-color: white;
   color: $sidebar-surface;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -271,7 +282,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
 .status-text {
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   color: $sidebar-text;
 }
