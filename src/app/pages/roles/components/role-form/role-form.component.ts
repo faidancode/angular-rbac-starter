@@ -6,11 +6,13 @@ import { finalize } from 'rxjs';
 import { RoleService } from '../../../../core/services/role.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { PermissionDto, RoleDto } from '../../../../core/types/role.types';
+import { LucideArrowLeft, LucideSave } from '@lucide/angular';
+import { IconButtonComponent } from '../../../../shared/components/icon-button/icon-button.component';
 
 @Component({
   selector: 'app-role-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconButtonComponent],
   templateUrl: './role-form.component.html',
   styleUrls: ['./role-form.component.scss'],
 })
@@ -29,14 +31,12 @@ export class RoleFormComponent implements OnInit {
     description: [''],
   });
 
-  isSubmitting = false;
+  readonly isSubmitting = signal(false);
   readonly isLoadingRole = signal(false);
   readonly isLoadingPermissions = signal(false);
   readonly groupedPermissions = signal<{ [subject: string]: PermissionDto[] }>({});
   readonly selectedPermissionIds = signal<Set<string>>(new Set());
-  readonly permissionSubjects = computed(() =>
-    Object.keys(this.groupedPermissions()).sort(),
-  );
+  readonly permissionSubjects = computed(() => Object.keys(this.groupedPermissions()).sort());
 
   ngOnInit() {
     this.roleId = this.resolveRoleId();
@@ -171,7 +171,7 @@ export class RoleFormComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
     const payload = {
       ...this.form.value,
@@ -189,7 +189,7 @@ export class RoleFormComponent implements OnInit {
       },
       error: (err) => {
         this.toast.error(err.error?.message || 'Failed to save role');
-        this.isSubmitting = false;
+        this.isSubmitting.set(false);
       },
     });
   }

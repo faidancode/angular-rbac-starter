@@ -9,15 +9,20 @@
     </div>
 
     <div class="page-header__actions">
-      <button type="button" class="btn" (click)="onCancel()">Cancel</button>
-      <button
-        type="button"
-        class="btn btn-primary"
+      <!-- Tombol Cancel / Back -->
+      <app-icon-button actionType="cancel" variant="secondary"> Back </app-icon-button>
+
+      <!-- Tombol Save -->
+      <app-icon-button
+        type="submit"
+        variant="primary"
+        actionType="save"
+        [loading]="isSubmitting()"
+        [disabled]="isLoadingRole() || isLoadingPermissions()"
         (click)="onSubmit()"
-        [disabled]="isSubmitting || isLoadingRole() || isLoadingPermissions()"
       >
-        {{ isSubmitting ? 'Syncing...' : 'Save' }}
-      </button>
+        Save
+      </app-icon-button>
     </div>
   </header>
 
