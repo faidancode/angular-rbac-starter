@@ -1,9 +1,10 @@
 /* 1. Tokens & Utilities (The Foundation) */
 @use './styles/abstract/variables' as *; // Menggantikan import colors, typography, spacing, transition
 @use './styles/abstract/utilities' as *;
+@use './styles/abstract/flex' as *;
+@use './styles/abstract/grid' as *;
 
 @use './styles/pages/page' as *;
-@use './styles/components/layout' as *;
 @use './styles/components/table' as *;
 @use './styles/components/buttons' as *;
 @use './styles/components/forms' as *;

@@ -1,85 +1,100 @@
-<div class="page-container role-form-page">
-  <header class="page-header role-form-header">
+<div class="page-container role-form-page flex flex-col gap-6">
+  <!-- Header Section -->
+  <header class="page-header">
     <div class="page-header__content">
-      <h2>{{ roleId ? 'Edit Role' : 'Create Role' }}</h2>
-      <p>Manage role details and module permissions.</p>
+      <h2 class="text-primary">{{ roleId ? 'Edit Role' : 'Create Role' }}</h2>
+      <p class="font-mono text-xs uppercase tracking-wider text-muted">
+        // Access Control Configuration
+      </p>
     </div>
 
     <div class="page-header__actions">
-      <button type="button" class="btn" (click)="onCancel()">Back to Roles</button>
+      <button type="button" class="btn" (click)="onCancel()">Cancel</button>
       <button
         type="button"
         class="btn btn-primary"
         (click)="onSubmit()"
         [disabled]="isSubmitting || isLoadingRole() || isLoadingPermissions()"
       >
-        {{ isSubmitting ? 'Saving...' : 'Save Role' }}
+        {{ isSubmitting ? 'Syncing...' : 'Save' }}
       </button>
     </div>
   </header>
 
   <div class="page-section">
     <div class="role-form-card">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="role-form-body">
-        <div class="form-group" [class.form-group--error]="isInvalid('name')">
-          <label for="name">Role Name</label>
-          <input id="name" type="text" formControlName="name" placeholder="e.g. HR Manager" />
-          <div class="form-error" *ngIf="isInvalid('name')">
-            Role name is required (min 3 chars).
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="role-form-body flex flex-col gap-8">
+        <!-- Role Information Grid -->
+        <div class="grid md:cols-2 gap-6">
+          <div class="form-group" [class.form-group--error]="isInvalid('name')">
+            <label for="name">Role</label>
+            <input id="name" type="text" formControlName="name" placeholder="E.G. TERMINAL_ADMIN" />
+            <div class="form-error" *ngIf="isInvalid('name')">[!] NAME_REQUIRED_MIN_3_CHARS</div>
+          </div>
+
+          <!-- Description (Full width on small, follows grid on md) -->
+          <div class="form-group md:span-1">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="1"
+              placeholder="Brief context..."
+            ></textarea>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            rows="3"
-            placeholder="Brief description"
-          ></textarea>
-        </div>
-
+        <!-- Permissions Manifest Section -->
         <section class="permissions-section">
-          <div class="permissions-header">
+          <div class="permissions-header flex items-end justify-between mb-6">
             <div>
-              <h3>Permissions</h3>
-              <p>Select one or more permissions for this role.</p>
+              <h3>Module Permissions</h3>
+              <p class="font-mono text-xs text-muted uppercase">Configure granular action access</p>
             </div>
-            <span class="permission-count">{{ selectedPermissionIds().size }} selected</span>
+            <span class="permission-count"> {{ selectedPermissionIds().size }} IDENTIFIED </span>
           </div>
 
+          <!-- State: Loading -->
           <div class="permissions-loading" *ngIf="isLoadingRole() || isLoadingPermissions()">
-            Loading role and permissions...
+            // INITIALIZING_PERMISSIONS_MANIFEST...
           </div>
 
+          <!-- State: Loaded -->
           <ng-container *ngIf="!isLoadingRole() && !isLoadingPermissions()">
-            <div class="permission-group" *ngFor="let subject of permissionSubjects()">
-              <h4 class="subject-title">{{ subject | titlecase }}</h4>
+            <div class="grid lg:cols-2 gap-6">
+              <div class="permission-group" *ngFor="let subject of permissionSubjects()">
+                <h4 class="subject-title">{{ subject }}</h4>
 
-              <div class="actions-grid">
-                <label class="checkbox-container" *ngFor="let perm of groupedPermissions()[subject]">
-                  <input
-                    type="checkbox"
-                    [checked]="isPermissionSelected(perm.id)"
-                    (change)="togglePermission(perm.id)"
-                  />
-                  <span class="checkmark"></span>
-                  <span class="action-label">{{ perm.action }}</span>
-                </label>
+                <div class="actions-grid">
+                  <label
+                    class="checkbox-container"
+                    *ngFor="let perm of groupedPermissions()[subject]"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="isPermissionSelected(perm.id)"
+                      (change)="togglePermission(perm.id)"
+                    />
+                    <span class="checkmark"></span>
+                    <span class="action-label">{{ perm.action }}</span>
+                  </label>
+                </div>
               </div>
             </div>
 
+            <!-- State: Empty -->
             <div class="permissions-empty" *ngIf="permissionSubjects().length === 0">
-              No permissions available.
+              [!] NO_PERMISSIONS_FOUND_IN_REGISTRY
             </div>
           </ng-container>
         </section>
 
+        <!-- Validation Banner -->
         <div
           class="form-banner--error"
           *ngIf="!isLoadingRole() && !isLoadingPermissions() && selectedPermissionIds().size === 0"
         >
-          Please select at least one permission.
+          CRITICAL: AT_LEAST_ONE_PERMISSION_MUST_BE_ACTIVE
         </div>
       </form>
     </div>
