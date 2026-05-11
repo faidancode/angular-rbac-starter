@@ -1,14 +1,9 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { AbilityService } from '../services/ability.service';
-
-function parsePermission(value: string): { action: string; subject: string } {
-  const separator = value.includes('.') ? '.' : ':';
-  const [subject, action] = value.split(separator);
-  return { action, subject };
-}
+import { parsePermission } from '../utils/permission.utils';
+import { AppPermission } from '../types/permission.type';
 
 // --- Auth Guard ---
 export const authGuard: CanActivateFn = () => {
@@ -20,7 +15,7 @@ export const authGuard: CanActivateFn = () => {
 
 // --- Permission Guard ---
 export const permissionGuard =
-  (permission: string): CanActivateFn =>
+  (permission: AppPermission): CanActivateFn =>
   () => {
     const ability = inject(AbilityService);
     const router = inject(Router);

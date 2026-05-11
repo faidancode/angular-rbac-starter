@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap, throwError, catchError, of } from 'rxjs';
@@ -30,6 +30,10 @@ interface LoginApiResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private abilityService = inject(AbilityService);
+
   // --- Private Signals ---
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
@@ -37,13 +41,6 @@ export class AuthService {
   // --- Public Computed ---
   readonly isAuthenticated = computed(() => !!this._token());
   readonly currentUser = computed(() => this._user());
-
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private abilityService: AbilityService,
-  ) {
-  }
 
   // --- Login ---
   login(email: string, password: string): Observable<void> {

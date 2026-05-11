@@ -116,16 +116,19 @@ export class EmployeesComponent implements OnInit {
 
   async onDelete(id: string) {
     const ok = await this.confirm.open({
-      title: 'Hapus Employee',
-      message: 'Apakah Anda yakin ingin menghapus employee ini?',
-      confirmText: 'Hapus',
-      cancelText: 'Batal',
+      title: 'Delete Employee',
+      message: 'Are you sure you want to delete this employee?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
     });
 
     if (ok) {
-      this.toast.success('Berhasil dihapus');
       this.service.remove(id).subscribe({
-        next: () => this.fetchData(),
+        next: () => {
+          this.toast.success('Successfully deleted');
+          this.fetchData();
+        },
+        error: () => this.toast.error('Failed to delete employee'),
       });
     }
   }

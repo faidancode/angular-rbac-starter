@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
 
   stats = computed(() => {
     const summary = this.dashboardService.dashboardSummary();
-    console.log(summary);
     return [
       {
         label: 'Total Active Employees',

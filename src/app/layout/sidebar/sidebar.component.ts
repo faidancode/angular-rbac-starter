@@ -13,6 +13,7 @@ import {
 
 import { AbilityService } from '../../core/services/ability.service';
 import { NavItem } from './sidebar.types';
+import { parsePermission } from '../../core/utils/permission.utils';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +25,7 @@ import { NavItem } from './sidebar.types';
     LucideChevronRight,
   ],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss'], // Atau masukkan ke blok styles di bawah
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   // --- state ---
@@ -91,7 +92,7 @@ export class SidebarComponent {
         if (item.children) {
           const filteredChildren = item.children.filter(child => {
             if (!child.permission) return true;
-            const { action, subject } = this.parsePermission(child.permission);
+            const { action, subject } = parsePermission(child.permission);
             return this.ability.can(action, subject);
           });
           return { ...item, children: filteredChildren };
@@ -101,7 +102,7 @@ export class SidebarComponent {
       .filter(item => {
         if (item.children) return item.children.length > 0;
         if (!item.permission) return true;
-        const { action, subject } = this.parsePermission(item.permission);
+        const { action, subject } = parsePermission(item.permission);
         return this.ability.can(action, subject);
       });
   });
@@ -110,12 +111,5 @@ export class SidebarComponent {
     if (item.children) {
       this.navItems.update(items => items.map(i => i.label === item.label ? { ...i, expanded: !i.expanded } : i));
     }
-  }
-
-  // --- helper ---
-  private parsePermission(value: string) {
-    const [subject, action] = value.includes('.') ? value.split('.') : value.split(':');
-
-    return { action, subject };
   }
 }

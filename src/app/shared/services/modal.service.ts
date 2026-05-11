@@ -1,55 +1,63 @@
 import {
-    ApplicationRef,
-    EnvironmentInjector,
-    Injectable,
-    Type,
-    createComponent,
+  ApplicationRef,
+  EnvironmentInjector,
+  Injectable,
+  Type,
+  createComponent,
+  inject,
+  EventEmitter,
+  EmbeddedViewRef,
 } from '@angular/core';
+
+export interface ModalComponent {
+  success?: EventEmitter<any>;
+  cancel?: EventEmitter<void>;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
-    constructor(
-        private appRef: ApplicationRef,
-        private injector: EnvironmentInjector
-    ) { }
+  private appRef = inject(ApplicationRef);
+  private injector = inject(EnvironmentInjector);
 
-    open<T extends object, R = any>(
-        component: Type<T>,
-        options?: Partial<T>
-    ): Promise<R | null> {
-        return new Promise((resolve) => {
-            const componentRef = createComponent(component, {
-                environmentInjector: this.injector,
-            });
+  open<T extends object, R = any>(
+    component: Type<T>,
+    options?: Partial<T>
+  ): Promise<R | null> {
+    return new Promise((resolve) => {
+      const componentRef = createComponent(component, {
+        environmentInjector: this.injector,
+      });
 
-            if (options) {
-                Object.assign(componentRef.instance, options);
-            }
+      const instance = componentRef.instance as T & ModalComponent;
 
-            if ((componentRef.instance as any).success) {
-                (componentRef.instance as any).success.subscribe((res: R) => {
-                    this.close(componentRef);
-                    resolve(res);
-                });
-            }
+      if (options) {
+        Object.assign(instance, options);
+      }
 
-            if ((componentRef.instance as any).cancel) {
-                (componentRef.instance as any).cancel.subscribe(() => {
-                    this.close(componentRef);
-                    resolve(null);
-                });
-            }
-
-            this.appRef.attachView(componentRef.hostView);
-            componentRef.changeDetectorRef.detectChanges();
-
-            const domElem = (componentRef.hostView as any).rootNodes[0];
-            document.body.appendChild(domElem);
+      if (instance.success) {
+        instance.success.subscribe((res: R) => {
+          this.close(componentRef);
+          resolve(res);
         });
-    }
+      }
 
-    private close(componentRef: any) {
-        this.appRef.detachView(componentRef.hostView);
-        componentRef.destroy();
-    }
+      if (instance.cancel) {
+        instance.cancel.subscribe(() => {
+          this.close(componentRef);
+          resolve(null);
+        });
+      }
+
+      this.appRef.attachView(componentRef.hostView);
+      componentRef.changeDetectorRef.detectChanges();
+
+      const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0];
+      document.body.appendChild(domElem);
+    });
+  }
+
+  private close(componentRef: any) {
+    this.appRef.detachView(componentRef.hostView);
+    componentRef.destroy();
+  }
 }

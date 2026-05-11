@@ -8,6 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { AbilityService } from '../services/ability.service';
+import { parsePermission } from '../utils/permission.utils';
+import { AppPermission } from '../types/permission.type';
 
 // --- helper parser ---
 function parsePermission(value: string): { action: string; subject: string } {
@@ -31,7 +33,7 @@ export class HasPermissionDirective {
   private vcr = inject(ViewContainerRef);
   private ability = inject(AbilityService);
 
-  private _permission = signal<PermissionInput>('');
+  private _permission = signal<PermissionInput>('' as any);
 
   constructor() {
     effect(() => {

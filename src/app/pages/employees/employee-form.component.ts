@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Employee, EmployeePayload } from '../../core/types/api.types';
 import { EmployeeService } from '../../core/services/employee.service';
 import { PositionService } from '../../core/services/position.service';
@@ -39,51 +40,56 @@ export class EmployeeFormComponent implements OnInit {
     dateOfActivePosition: [''],
   });
 
-  ngOnInit() {
-    if (!this.positionService.positions().length && !this.positionService.loading()) {
-      const previousLimit = this.positionService.limit();
-
-      this.positionService.fetchAll(1, false, '', 100).subscribe({
-        next: () => this.positionService.updateLimit(previousLimit),
-        error: () => this.positionService.updateLimit(previousLimit),
-      });
-    }
-
-    this.route.paramMap.subscribe(params => {
+  constructor() {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
       const id = params.get('id');
       if (id && id !== 'new') {
         this.isEdit = true;
-        this.loading.set(true);
-        this.employeeService.getById(id).subscribe({
-          next: (res) => {
-            this.employee = res.data;
-            this.employeeForm.patchValue({
-              nip: this.employee.nip,
-              fullName: this.employee.fullName,
-              gender: this.employee.gender,
-              positionId: this.employee.positionId,
-              employeeStatus: this.employee.employeeStatus,
-              isActive: this.employee.isActive ?? true,
-              dateOfJoining: this.toDateInputValue(this.employee.dateOfJoining),
-              dateOfActivePosition: this.toDateInputValue(this.employee.dateOfActivePosition),
-            });
-            this.loading.set(false);
-          },
-          error: () => {
-            this.toast.error('Gagal memuat data employee');
-            this.onCancel();
-          }
-        });
+        this.loadEmployee(id);
       } else {
         this.isEdit = false;
       }
     });
 
     const nipControl = this.employeeForm.get('nip');
-    nipControl?.valueChanges.subscribe(() => {
+    nipControl?.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       this.errorMessage.set(null);
       if (nipControl.hasError('conflict')) {
         nipControl.setErrors(null);
+      }
+    });
+  }
+
+  ngOnInit() {
+    if (!this.positionService.items().length && !this.positionService.loading()) {
+      const previousLimit = this.positionService.limit();
+      this.positionService.fetchAll(1, false, '', 100).subscribe({
+        next: () => this.positionService.updateLimit(previousLimit),
+        error: () => this.positionService.updateLimit(previousLimit),
+      });
+    }
+  }
+
+  loadEmployee(id: string) {
+    this.loading.set(true);
+    this.employeeService.getById(id).subscribe({
+      next: (res) => {
+        this.employee = res.data;
+        this.employeeForm.patchValue({
+          nip: this.employee.nip,
+          fullName: this.employee.fullName,
+          gender: this.employee.gender,
+          positionId: this.employee.positionId,
+          employeeStatus: this.employee.employeeStatus,
+          isActive: this.employee.isActive ?? true,
+          dateOfJoining: this.toDateInputValue(this.employee.dateOfJoining),
+          dateOfActivePosition: this.toDateInputValue(this.employee.dateOfActivePosition),
+        });
+        this.loading.set(false);
+      },
+      error: () => {
+        this.toast.error('Failed to load employee data');
+        this.onCancel();
       }
     });
   }
@@ -116,18 +122,18 @@ export class EmployeeFormComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.loading.set(false);
-        this.toast.success('Berhasil disimpan');
+        this.toast.success('Saved successfully');
         this.router.navigate(['..'], { relativeTo: this.route });
       },
       error: (err) => {
         this.loading.set(false);
-        this.toast.error('Gagal disimpan');
+        this.toast.error('Failed to save');
 
-        if (err.statusCode === 409) {
+        if (err.status === 409) {
           this.employeeForm.get('nip')?.setErrors({ conflict: true });
-          this.errorMessage.set(err.message || 'NIP sudah digunakan.');
+          this.errorMessage.set(err.message || 'NIP is already in use.');
         } else {
-          this.errorMessage.set('Terjadi kesalahan sistem. Silakan coba lagi.');
+          this.errorMessage.set('A system error occurred. Please try again.');
         }
       },
     });
