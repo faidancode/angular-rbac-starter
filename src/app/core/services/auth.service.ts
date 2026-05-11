@@ -1,8 +1,8 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { map, Observable, tap, throwError, catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AbilityService } from './ability.service';
 
 // --- Types ---
@@ -31,9 +31,8 @@ interface LoginApiResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // --- Private Signals ---
-  private readonly _token = signal<string | null>(localStorage.getItem('hris_token'));
-
-  private readonly _user = signal<AuthUser | null>(this._loadUser());
+  private readonly _token = signal<string | null>(null);
+  private readonly _user = signal<AuthUser | null>(null);
 
   // --- Public Computed ---
   readonly isAuthenticated = computed(() => !!this._token());
@@ -44,7 +43,6 @@ export class AuthService {
     private router: Router,
     private abilityService: AbilityService,
   ) {
-    this._restorePermissions();
   }
 
   // --- Login ---
@@ -57,23 +55,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           const data = res.data;
-
-          // --- persist ---
-          localStorage.setItem('hris_token', data.accessToken);
-          localStorage.setItem('hris_user', JSON.stringify(data.user));
-          localStorage.setItem('hris_permissions', JSON.stringify(data.permissions));
-
-          // --- update state ---
-          this._token.set(data.accessToken);
-          this._user.set(data.user);
-
-          // --- set permissions (🔥 no decode JWT) ---
-          this.abilityService.setPermissions(
-            (data.permissions ?? []).map((p) => ({
-              action: p.action,
-              subject: p.subject,
-            })),
-          );
+          this._handleAuthResponse(data);
         }),
         tap(() => {
           this.router.navigate(['/dashboard']);
@@ -84,7 +66,7 @@ export class AuthService {
 
   // --- Logout ---
   logout(): void {
-    ['hris_token', 'hris_user', 'hris_permissions'].forEach((k) => localStorage.removeItem(k));
+    localStorage.removeItem('hris_refresh_token');
 
     this._token.set(null);
     this._user.set(null);
@@ -100,30 +82,51 @@ export class AuthService {
     return this._token();
   }
 
-  // --- Init helper (optional, for refresh case) ---
-  hydrate(): void {
-    const user = this._loadUser();
-    if (user) {
-      this._user.set(user);
+  // --- Refresh Token ---
+  refreshToken(): Observable<string> {
+    const refreshToken = localStorage.getItem('hris_refresh_token');
+    if (!refreshToken) {
+      this.logout();
+      return throwError(() => new Error('No refresh token'));
     }
+
+    return this.http.post<LoginApiResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken }).pipe(
+      tap((res) => {
+        this._handleAuthResponse(res.data);
+      }),
+      map((res) => res.data.accessToken)
+    );
   }
 
-  private _loadUser(): AuthUser | null {
-    try {
-      return JSON.parse(localStorage.getItem('hris_user') ?? 'null');
-    } catch {
-      return null;
+  // --- Init helper (for refresh case) ---
+  hydrate(): Observable<void> {
+    const refreshToken = localStorage.getItem('hris_refresh_token');
+    if (refreshToken) {
+      return this.refreshToken().pipe(
+        map(() => void 0),
+        catchError(() => {
+          this.logout();
+          return of(void 0);
+        })
+      );
     }
+    return of(void 0);
   }
 
-  private _restorePermissions(): void {
-    try {
-      const perms = JSON.parse(localStorage.getItem('hris_permissions') ?? 'null');
-      if (perms) {
-        this.abilityService.setPermissions(perms);
-      }
-    } catch (e) {
-      console.error('Failed to restore permissions', e);
-    }
+  private _handleAuthResponse(data: LoginApiResponse['data']): void {
+    // --- persist only refresh token ---
+    localStorage.setItem('hris_refresh_token', data.refreshToken);
+
+    // --- update state in memory ---
+    this._token.set(data.accessToken);
+    this._user.set(data.user);
+
+    // --- set permissions ---
+    this.abilityService.setPermissions(
+      (data.permissions ?? []).map((p) => ({
+        action: p.action,
+        subject: p.subject,
+      })),
+    );
   }
 }

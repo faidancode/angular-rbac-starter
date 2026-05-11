@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import {
-  LucideLayoutGrid,
   LucideZap,
   LucideCircleAlert,
   LucideMail,
@@ -18,13 +17,12 @@ import {
   standalone: true,
   imports: [
     FormsModule,
-    LucideLayoutGrid,
     LucideZap,
     LucideCircleAlert,
     LucideMail,
     LucideLock,
     LucideArrowRight,
-    LucideContactRound
+    LucideContactRound,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -38,7 +36,6 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  protected readonly LucideLayoutGrid = LucideLayoutGrid;
   protected readonly LucideZap = LucideZap;
   protected readonly LucideCircleAlert = LucideCircleAlert;
   protected readonly LucideMail = LucideMail;
