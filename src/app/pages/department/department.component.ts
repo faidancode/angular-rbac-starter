@@ -13,7 +13,7 @@ import {
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 import { ConfirmService } from '../../core/services/confirm.service';
 import { DepartmentService } from '../../core/services/department.service';
-import { ModalService } from '../../core/services/modal.service';
+import { ModalService } from '../../shared/services/modal.service';
 import { DepartmentFormComponent } from './department-form.component';
 import { ToastService } from '../../shared/services/toast.service';
 
