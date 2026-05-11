@@ -103,10 +103,20 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'forbidden',
+        loadComponent: () =>
+          import('./pages/error/forbidden.component').then((m) => m.ForbiddenComponent),
+      },
+      {
+        path: 'not-found',
+        loadComponent: () =>
+          import('./pages/error/not-found.component').then((m) => m.NotFoundComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'not-found' },
 ];

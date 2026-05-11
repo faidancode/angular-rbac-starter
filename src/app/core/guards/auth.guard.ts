@@ -27,5 +27,5 @@ export const permissionGuard =
 
     const { action, subject } = parsePermission(permission);
 
-    return ability.can(action, subject) ? true : router.createUrlTree(['/dashboard']);
+    return ability.can(action, subject) ? true : router.createUrlTree(['/forbidden']);
   };
