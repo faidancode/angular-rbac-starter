@@ -3,10 +3,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Employee, EmployeePayload } from '../../core/types/api.types';
-import { EmployeeService } from '../../core/services/employee.service';
-import { PositionService } from '../../core/services/position.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EmployeeMutationService } from '../../core/services/employees/employee-mutation.service';
+import { PositionQueryService } from '../../core/services/positions/position-query.service';
+import { EmployeeQueryService } from '../../core/services/employees/employee-query.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -16,8 +17,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class EmployeeFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private employeeService = inject(EmployeeService);
-  protected readonly positionService = inject(PositionService);
+  private employeeQuery = inject(EmployeeQueryService);
+  private employeeMutation = inject(EmployeeMutationService);
+  protected readonly positionQuery = inject(PositionQueryService);
   private toast = inject(ToastService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -61,18 +63,18 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.positionService.items().length && !this.positionService.loading()) {
-      const previousLimit = this.positionService.limit();
-      this.positionService.fetchAll(1, false, '', 100).subscribe({
-        next: () => this.positionService.updateLimit(previousLimit),
-        error: () => this.positionService.updateLimit(previousLimit),
+    if (!this.positionQuery.items().length && !this.positionQuery.loading()) {
+      const previousLimit = this.positionQuery.limit();
+      this.positionQuery.fetchAll(1, false, '', 100).subscribe({
+        next: () => this.positionQuery.setLimit(previousLimit),
+        error: () => this.positionQuery.setLimit(previousLimit),
       });
     }
   }
 
   loadEmployee(id: string) {
     this.loading.set(true);
-    this.employeeService.getById(id).subscribe({
+    this.employeeQuery.getById(id).subscribe({
       next: (res) => {
         this.employee = res.data;
         this.employeeForm.patchValue({
@@ -116,8 +118,8 @@ export class EmployeeFormComponent implements OnInit {
     this.errorMessage.set(null);
 
     const request = this.employee
-      ? this.employeeService.update(this.employee.id, payload)
-      : this.employeeService.create(payload);
+      ? this.employeeMutation.update(this.employee.id, payload)
+      : this.employeeMutation.create(payload);
 
     request.subscribe({
       next: () => {

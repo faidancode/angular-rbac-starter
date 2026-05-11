@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Position } from '../../core/types/api.types';
-import { PositionService } from '../../core/services/position.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { DepartmentService } from '../../core/services/department.service';
+import { PositionMutationService } from '../../core/services/positions/position-mutation.service';
+import { DepartmentQueryService } from '../../core/services/departments/department-query.service';
 
 @Component({
   selector: 'app-position-form',
@@ -14,9 +14,9 @@ import { DepartmentService } from '../../core/services/department.service';
 })
 export class PositionFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private positionService = inject(PositionService);
+  private positionMutation = inject(PositionMutationService);
   private toast = inject(ToastService);
-  protected readonly departmentService = inject(DepartmentService);
+  protected readonly departmentQuery = inject(DepartmentQueryService);
 
   @Input() position: Position | null = null;
 
@@ -42,12 +42,12 @@ export class PositionFormComponent implements OnInit {
       });
     }
 
-    if (!this.departmentService.departments().length && !this.departmentService.loading()) {
-      const previousLimit = this.departmentService.limit();
+    if (!this.departmentQuery.items().length && !this.departmentQuery.loading()) {
+      const previousLimit = this.departmentQuery.limit();
 
-      this.departmentService.fetchAll(1, false, '', 100).subscribe({
-        next: () => this.departmentService.updateLimit(previousLimit),
-        error: () => this.departmentService.updateLimit(previousLimit),
+      this.departmentQuery.fetchAll(1, false, '', 100).subscribe({
+        next: () => this.departmentQuery.setLimit(previousLimit),
+        error: () => this.departmentQuery.setLimit(previousLimit),
       });
     }
 
@@ -82,24 +82,24 @@ export class PositionFormComponent implements OnInit {
     this.errorMessage.set(null);
 
     const request = this.position
-      ? this.positionService.update(this.position.id, payload)
-      : this.positionService.create(payload);
+      ? this.positionMutation.update(this.position.id, payload)
+      : this.positionMutation.create(payload);
 
     request.subscribe({
       next: () => {
         this.loading.set(false);
         this.success.emit(true);
-        this.toast.success('Berhasil disimpan');
+        this.toast.success('Saved successfully');
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading.set(false);
-        this.toast.error('Gagal disimpan');
+        this.toast.error('Failed to save');
 
-        if (err.statusCode === 409) {
+        if (err.status === 409) {
           this.positionForm.get('name')?.setErrors({ conflict: true });
-          this.errorMessage.set(err.message || 'Nama departemen sudah digunakan.');
+          this.errorMessage.set(err.message || 'Position name is already in use.');
         } else {
-          this.errorMessage.set('Terjadi kesalahan sistem. Silakan coba lagi.');
+          this.errorMessage.set('A system error occurred. Please try again.');
         }
       },
     });

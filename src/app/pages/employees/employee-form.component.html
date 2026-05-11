@@ -30,17 +30,10 @@
 
           <div class="form-group" [class.form-group--error]="isInvalid('fullName')">
             <label for="fullName">Full Name</label>
-            <input
-              id="fullName"
-              type="text"
-              formControlName="fullName"
-              placeholder="e.g. Ahmad Fauzi"
-            />
+            <input id="fullName" type="text" formControlName="fullName" placeholder="e.g. Ahmad Fauzi" />
 
-            <div
-              class="form-error"
-              *ngIf="isInvalid('fullName') && !employeeForm.get('fullName')?.hasError('conflict')"
-            >
+            <div class="form-error"
+              *ngIf="isInvalid('fullName') && !employeeForm.get('fullName')?.hasError('conflict')">
               Full name is required
             </div>
           </div>
@@ -64,17 +57,15 @@
             <label for="positionId">Position</label>
             <select id="positionId" formControlName="positionId">
               <option value="" disabled>
-                {{ positionService.loading() ? 'Loading positions...' : 'Select position' }}
+                {{ positionQuery.loading() ? 'Loading positions...' : 'Select position' }}
               </option>
-              @for (position of positionService.positions(); track position.id) {
-                <option [value]="position.id">{{ position.name }}</option>
+              @for (position of positionQuery.positions(); track position.id) {
+              <option [value]="position.id">{{ position.name }}</option>
               }
             </select>
 
-            <div
-              class="form-error"
-              *ngIf="isInvalid('positionId') && !employeeForm.get('positionId')?.hasError('conflict')"
-            >
+            <div class="form-error"
+              *ngIf="isInvalid('positionId') && !employeeForm.get('positionId')?.hasError('conflict')">
               Position is required
             </div>
           </div>
@@ -96,11 +87,7 @@
 
           <div class="form-group">
             <label for="dateOfActivePosition">Date of Active Position</label>
-            <input
-              id="dateOfActivePosition"
-              type="date"
-              formControlName="dateOfActivePosition"
-            />
+            <input id="dateOfActivePosition" type="date" formControlName="dateOfActivePosition" />
           </div>
         </div>
       </div>

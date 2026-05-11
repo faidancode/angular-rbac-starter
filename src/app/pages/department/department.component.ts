@@ -12,10 +12,11 @@ import {
 } from '@lucide/angular';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 import { ConfirmService } from '../../core/services/confirm.service';
-import { DepartmentService } from '../../core/services/department.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { DepartmentFormComponent } from './department-form.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { DepartmentQueryService } from '../../core/services/departments/department-query.service';
+import { DepartmentMutationService } from '../../core/services/departments/department-mutation.service';
 
 @Component({
   selector: 'app-department',
@@ -36,7 +37,8 @@ import { ToastService } from '../../shared/services/toast.service';
   styleUrls: ['./department.component.scss']
 })
 export class DepartmentComponent implements OnInit {
-  protected readonly service = inject(DepartmentService);
+  protected readonly query = inject(DepartmentQueryService);
+  private mutation = inject(DepartmentMutationService);
 
   private confirm = inject(ConfirmService);
   private modal = inject(ModalService);
@@ -53,10 +55,10 @@ export class DepartmentComponent implements OnInit {
   protected readonly LucidePencil = LucidePencil;
 
   // --- Computed for Pagination UI ---
-  startRange = computed(() => (this.service.page() - 1) * this.service.limit() + 1);
+  startRange = computed(() => (this.query.page() - 1) * this.query.limit() + 1);
   endRange = computed(() => {
-    const end = this.service.page() * this.service.limit();
-    return end > this.service.total() ? this.service.total() : end;
+    const end = this.query.page() * this.query.limit();
+    return end > this.query.total() ? this.query.total() : end;
   });
 
   ngOnInit() {
@@ -64,12 +66,12 @@ export class DepartmentComponent implements OnInit {
   }
 
   fetchData() {
-    this.service.fetchAll(
-      this.service.page(),
+    this.query.fetchAll(
+      this.query.page(),
       false,
-      this.service.searchQuery(),
-      this.service.limit(),
-      this.service.sort()
+      this.query.searchQuery(),
+      this.query.limit(),
+      this.query.sort()
     ).subscribe();
   }
 
@@ -84,26 +86,26 @@ export class DepartmentComponent implements OnInit {
   }
 
   onSearch(query: string) {
-    this.service.fetchAll(1, false, query).subscribe();
+    this.query.fetchAll(1, false, query).subscribe();
   }
 
   onLimitChange(limit: number) {
-    this.service.updateLimit(limit);
+    this.query.setLimit(limit);
     this.fetchData();
   }
 
   onPageChange(page: number) {
-    this.service.fetchAll(page).subscribe();
+    this.query.fetchAll(page).subscribe();
   }
 
   toggleSort(field: string) {
-    const currentSort = this.service.sort();
+    const currentSort = this.query.sort();
     const [currField, currDir] = currentSort.split(':');
     let newDir = 'asc';
     if (currField === field && currDir === 'asc') {
       newDir = 'desc';
     }
-    this.service.fetchAll(1, false, this.service.searchQuery(), this.service.limit(), `${field}:${newDir}`).subscribe();
+    this.query.fetchAll(1, false, this.query.searchQuery(), this.query.limit(), `${field}:${newDir}`).subscribe();
   }
 
   async onDelete(id: string) {
@@ -116,7 +118,7 @@ export class DepartmentComponent implements OnInit {
 
     if (ok) {
       this.toast.success('Berhasil dihapus');
-      this.service.remove(id).subscribe({
+      this.mutation.remove(id).subscribe({
         next: () => this.fetchData()
       });
     } else {

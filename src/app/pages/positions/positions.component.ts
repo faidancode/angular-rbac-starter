@@ -12,10 +12,11 @@ import {
 } from '@lucide/angular';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 import { ConfirmService } from '../../core/services/confirm.service';
-import { PositionService } from '../../core/services/position.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { PositionFormComponent } from './position-form.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { PositionQueryService } from '../../core/services/positions/position-query.service';
+import { PositionMutationService } from '../../core/services/positions/position-mutation.service';
 
 @Component({
   selector: 'app-position',
@@ -36,7 +37,8 @@ import { ToastService } from '../../shared/services/toast.service';
   styleUrls: ['./positions.component.scss'],
 })
 export class PositionComponent implements OnInit {
-  protected readonly service = inject(PositionService);
+  protected readonly query = inject(PositionQueryService);
+  private mutation = inject(PositionMutationService);
 
   private confirm = inject(ConfirmService);
   private modal = inject(ModalService);
@@ -52,10 +54,10 @@ export class PositionComponent implements OnInit {
   protected readonly LucidePencil = LucidePencil;
 
   // --- Computed for Pagination UI ---
-  startRange = computed(() => (this.service.page() - 1) * this.service.limit() + 1);
+  startRange = computed(() => (this.query.page() - 1) * this.query.limit() + 1);
   endRange = computed(() => {
-    const end = this.service.page() * this.service.limit();
-    return end > this.service.total() ? this.service.total() : end;
+    const end = this.query.page() * this.query.limit();
+    return end > this.query.total() ? this.query.total() : end;
   });
 
   ngOnInit() {
@@ -63,13 +65,13 @@ export class PositionComponent implements OnInit {
   }
 
   fetchData() {
-    this.service
+    this.query
       .fetchAll(
-        this.service.page(),
+        this.query.page(),
         false,
-        this.service.searchQuery(),
-        this.service.limit(),
-        this.service.sort(),
+        this.query.searchQuery(),
+        this.query.limit(),
+        this.query.sort(),
       )
       .subscribe();
   }
@@ -85,27 +87,27 @@ export class PositionComponent implements OnInit {
   }
 
   onSearch(query: string) {
-    this.service.fetchAll(1, false, query).subscribe();
+    this.query.fetchAll(1, false, query).subscribe();
   }
 
   onLimitChange(limit: number) {
-    this.service.updateLimit(limit);
+    this.query.setLimit(limit);
     this.fetchData();
   }
 
   onPageChange(page: number) {
-    this.service.fetchAll(page).subscribe();
+    this.query.fetchAll(page).subscribe();
   }
 
   toggleSort(field: string) {
-    const currentSort = this.service.sort();
+    const currentSort = this.query.sort();
     const [currField, currDir] = currentSort.split(':');
     let newDir = 'asc';
     if (currField === field && currDir === 'asc') {
       newDir = 'desc';
     }
-    this.service
-      .fetchAll(1, false, this.service.searchQuery(), this.service.limit(), `${field}:${newDir}`)
+    this.query
+      .fetchAll(1, false, this.query.searchQuery(), this.query.limit(), `${field}:${newDir}`)
       .subscribe();
   }
 
@@ -119,7 +121,7 @@ export class PositionComponent implements OnInit {
 
     if (ok) {
       this.toast.success('Berhasil dihapus');
-      this.service.remove(id).subscribe({
+      this.mutation.remove(id).subscribe({
         next: () => this.fetchData(),
       });
     } else {

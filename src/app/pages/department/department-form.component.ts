@@ -7,8 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Department } from '../../core/types/api.types';
-import { DepartmentService } from '../../core/services/department.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { DepartmentMutationService } from '../../core/services/departments/department-mutation.service';
 
 @Component({
   selector: 'app-department-form',
@@ -18,7 +18,7 @@ import { ToastService } from '../../shared/services/toast.service';
 })
 export class DepartmentFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private departmentService = inject(DepartmentService);
+  private departmentMutation = inject(DepartmentMutationService);
   private toast = inject(ToastService);
 
 
@@ -79,24 +79,24 @@ export class DepartmentFormComponent implements OnInit {
     this.errorMessage.set(null);
 
     const request = this.department
-      ? this.departmentService.update(this.department.id, payload)
-      : this.departmentService.create(payload);
+      ? this.departmentMutation.update(this.department.id, payload)
+      : this.departmentMutation.create(payload);
 
     request.subscribe({
       next: () => {
         this.loading.set(false);
         this.success.emit(true);
-        this.toast.success('Berhasil disimpan');
+        this.toast.success('Saved successfully');
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading.set(false);
-        this.toast.error('Gagal disimpan');
+        this.toast.error('Failed to save');
 
-        if (err.statusCode === 409) {
+        if (err.status === 409) {
           this.departmentForm.get('name')?.setErrors({ conflict: true });
-          this.errorMessage.set(err.message || 'Nama departemen sudah digunakan.');
+          this.errorMessage.set(err.message || 'Department name is already in use.');
         } else {
-          this.errorMessage.set('Terjadi kesalahan sistem. Silakan coba lagi.');
+          this.errorMessage.set('A system error occurred. Please try again.');
         }
       },
     });

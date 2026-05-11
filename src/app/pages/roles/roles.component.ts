@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
-import { RoleService } from '../../core/services/role.service';
 import { ConfirmService } from '../../core/services/confirm.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { RoleDto } from '../../core/types/role.types';
 import { finalize } from 'rxjs';
+import { RoleQueryService } from '../../core/services/roles/role-query.service';
+import { RoleMutationService } from '../../core/services/roles/role-mutation.service';
 
 @Component({
   selector: 'app-roles',
@@ -16,7 +17,8 @@ import { finalize } from 'rxjs';
   styleUrls: ['./roles.component.scss'],
 })
 export class RolesComponent implements OnInit {
-  private roleService = inject(RoleService);
+  private roleQuery = inject(RoleQueryService);
+  private roleMutation = inject(RoleMutationService);
   private router = inject(Router);
   private confirmService = inject(ConfirmService);
   private toastService = inject(ToastService);
@@ -30,8 +32,8 @@ export class RolesComponent implements OnInit {
 
   fetchRoles() {
     this.isLoading.set(true);
-    this.roleService
-      .getAll({ limit: 100 })
+    this.roleQuery
+      .fetchAll(100)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (res: any) => {
@@ -69,12 +71,12 @@ export class RolesComponent implements OnInit {
     });
 
     if (ok) {
-      this.roleService.remove(id).subscribe({
+      this.roleMutation.remove(id).subscribe({
         next: () => {
           this.toastService.success('Role deleted successfully');
           this.fetchRoles();
         },
-        error: (err) => {
+        error: (err: any) => {
           this.toastService.error(err.error?.message || 'Failed to delete role');
         },
       });

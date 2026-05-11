@@ -12,11 +12,7 @@ import { parsePermission } from '../utils/permission.utils';
 import { AppPermission } from '../types/permission.type';
 
 // --- helper parser ---
-function parsePermission(value: string): { action: string; subject: string } {
-  const separator = value.includes(':') ? ':' : '.';
-  const [subject, action] = value.split(separator);
-  return { action, subject };
-}
+
 
 type PermissionInput =
   | string

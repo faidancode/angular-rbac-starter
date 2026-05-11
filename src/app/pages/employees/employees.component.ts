@@ -12,10 +12,11 @@ import {
 } from '@lucide/angular';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 import { ConfirmService } from '../../core/services/confirm.service';
-import { EmployeeService } from '../../core/services/employee.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { Employee } from '../../core/types/api.types';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EmployeeQueryService } from '../../core/services/employees/employee-query.service';
+import { EmployeeMutationService } from '../../core/services/employees/employee-mutation.service';
 
 @Component({
   selector: 'app-employees',
@@ -36,7 +37,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./employees.component.scss'],
 })
 export class EmployeesComponent implements OnInit {
-  protected readonly service = inject(EmployeeService);
+  protected readonly query = inject(EmployeeQueryService);
+  private mutation = inject(EmployeeMutationService);
 
   private confirm = inject(ConfirmService);
   private toast = inject(ToastService);
@@ -57,13 +59,13 @@ export class EmployeesComponent implements OnInit {
   }
 
   fetchData() {
-    this.service
+    this.query
       .fetchAll(
-        this.service.page(),
+        this.query.page(),
         false,
-        this.service.searchQuery(),
-        this.service.limit(),
-        this.service.sort(),
+        this.query.searchQuery(),
+        this.query.limit(),
+        this.query.sort(),
       )
       .subscribe();
   }
@@ -77,32 +79,32 @@ export class EmployeesComponent implements OnInit {
   }
 
   onSearch(query: string) {
-    this.service
-      .fetchAll(1, false, query, this.service.limit(), this.service.sort())
+    this.query
+      .fetchAll(1, false, query, this.query.limit(), this.query.sort())
       .subscribe();
   }
 
   onLimitChange(limit: number) {
-    this.service.updateLimit(limit);
+    this.query.setLimit(limit);
     this.fetchData();
   }
 
   onPageChange(page: number) {
-    this.service
-      .fetchAll(page, false, this.service.searchQuery(), this.service.limit(), this.service.sort())
+    this.query
+      .fetchAll(page, false, this.query.searchQuery(), this.query.limit(), this.query.sort())
       .subscribe();
   }
 
   toggleSort(field: string) {
-    const currentSort = this.service.sort();
+    const currentSort = this.query.sort();
     const [currField, currDir] = currentSort.split(':');
     let newDir = 'asc';
     if (currField === field && currDir === 'asc') {
       newDir = 'desc';
     }
 
-    this.service
-      .fetchAll(1, false, this.service.searchQuery(), this.service.limit(), `${field}:${newDir}`)
+    this.query
+      .fetchAll(1, false, this.query.searchQuery(), this.query.limit(), `${field}:${newDir}`)
       .subscribe();
   }
 
@@ -123,7 +125,7 @@ export class EmployeesComponent implements OnInit {
     });
 
     if (ok) {
-      this.service.remove(id).subscribe({
+      this.mutation.remove(id).subscribe({
         next: () => {
           this.toast.success('Successfully deleted');
           this.fetchData();

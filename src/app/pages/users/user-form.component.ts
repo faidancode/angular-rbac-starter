@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { User } from '../../core/types/api.types';
-import { UserService } from '../../core/services/user.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { RoleService } from '../../core/services/role.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserQueryService } from '../../core/services/users/user-query.service';
+import { RoleQueryService } from '../../core/services/roles/role-query.service';
+import { UserMutationService } from '../../core/services/users/user-mutation.service';
 
 @Component({
   selector: 'app-user-form',
@@ -15,9 +16,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class UserFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private userService = inject(UserService);
+  private userQuery = inject(UserQueryService);
+  private userMutation = inject(UserMutationService);
   private toast = inject(ToastService);
-  protected readonly roleService = inject(RoleService);
+  protected readonly roleQuery = inject(RoleQueryService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -54,12 +56,12 @@ export class UserFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.roleService.roles().length && !this.roleService.loading()) {
-      const previousLimit = this.roleService.limit();
+    if (!this.roleQuery.roles().length && !this.roleQuery.loading()) {
+      const previousLimit = this.roleQuery.limit();
 
-      this.roleService.fetchAll(1, false, '', 100).subscribe({
-        next: () => this.roleService.updateLimit(previousLimit),
-        error: () => this.roleService.updateLimit(previousLimit),
+      this.roleQuery.fetchAll(1, false, '', 100).subscribe({
+        next: () => this.roleQuery.setLimit(previousLimit),
+        error: () => this.roleQuery.setLimit(previousLimit),
       });
     }
 
@@ -68,7 +70,7 @@ export class UserFormComponent implements OnInit {
       if (id && id !== 'new') {
         this.isEdit = true;
         this.loading.set(true);
-        this.userService.getById(id).subscribe({
+        this.userQuery.getById(id).subscribe({
           next: (res) => {
             this.user = res.data;
             this.userForm.patchValue({
@@ -132,8 +134,8 @@ export class UserFormComponent implements OnInit {
     this.errorMessage.set(null);
 
     const request = this.user
-      ? this.userService.update(this.user.id, payload)
-      : this.userService.create(payload);
+      ? this.userMutation.update(this.user.id, payload)
+      : this.userMutation.create(payload);
 
     request.subscribe({
       next: () => {

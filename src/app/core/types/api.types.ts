@@ -29,6 +29,12 @@ export interface Department {
   updatedAt: string;
 }
 
+export interface DepartmentPayload {
+  name: string;
+  description?: string;
+  isActive?: boolean;
+}
+
 export interface Position {
   id: string;
   name: string;
@@ -37,6 +43,13 @@ export interface Position {
   isActive?: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PositionPayload {
+  name: string;
+  description?: string;
+  departmentId: string;
+  isActive?: boolean;
 }
 
 // --- Employee ---

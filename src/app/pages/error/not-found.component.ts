@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LucideFileQuestion } from '@lucide/angular';
+import { LucideFile } from '@lucide/angular';
 
 @Component({
   selector: 'app-not-found',
   standalone: true,
-  imports: [RouterLink, LucideFileQuestion],
+  imports: [RouterLink, LucideFile],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full text-center space-y-8">
         <div>
-          <lucide-icon [name]="LucideFileQuestion" class="mx-auto h-24 w-24 text-indigo-500"></lucide-icon>
+          <svg lucideFile [size]="96" class="mx-auto text-indigo-500"></svg>
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">404 - Not Found</h2>
           <p class="mt-2 text-sm text-gray-600">
             The page you are looking for doesn't exist or has been moved.
@@ -26,5 +26,5 @@ import { LucideFileQuestion } from '@lucide/angular';
   `,
 })
 export class NotFoundComponent {
-  protected readonly LucideFileQuestion = LucideFileQuestion;
+  protected readonly LucideFile = LucideFile;
 }

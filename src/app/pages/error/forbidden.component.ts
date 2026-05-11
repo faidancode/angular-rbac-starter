@@ -10,7 +10,7 @@ import { LucideShieldAlert } from '@lucide/angular';
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full text-center space-y-8">
         <div>
-          <lucide-icon [name]="LucideShieldAlert" class="mx-auto h-24 w-24 text-red-500"></lucide-icon>
+          <svg lucideShieldAlert [size]="96" class="mx-auto text-red-500"></svg>
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">403 - Forbidden</h2>
           <p class="mt-2 text-sm text-gray-600">
             You do not have permission to access this page. Please contact your administrator if you believe this is an error.

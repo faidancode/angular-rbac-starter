@@ -3,11 +3,12 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
-import { RoleService } from '../../../../core/services/role.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { PermissionDto, RoleDto } from '../../../../core/types/role.types';
 import { LucideArrowLeft, LucideSave } from '@lucide/angular';
 import { IconButtonComponent } from '../../../../shared/components/icon-button/icon-button.component';
+import { RoleQueryService } from '../../../../core/services/roles/role-query.service';
+import { RoleMutationService } from '../../../../core/services/roles/role-mutation.service';
 
 @Component({
   selector: 'app-role-form',
@@ -18,7 +19,8 @@ import { IconButtonComponent } from '../../../../shared/components/icon-button/i
 })
 export class RoleFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private roleService = inject(RoleService);
+  private query = inject(RoleQueryService);
+  private mutation = inject(RoleMutationService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toast = inject(ToastService);
@@ -60,7 +62,7 @@ export class RoleFormComponent implements OnInit {
   private loadRole(id: string) {
     this.isLoadingRole.set(true);
 
-    this.roleService
+    this.query
       .getById(id)
       .pipe(
         finalize(() => {
@@ -85,7 +87,7 @@ export class RoleFormComponent implements OnInit {
 
           this.selectedPermissionIds.set(new Set(role.permissions?.map((perm) => perm.id) ?? []));
         },
-        error: (err) => {
+        error: (err: any) => {
           this.toast.error(err?.error?.message || 'Failed to load role');
         },
       });
@@ -94,7 +96,7 @@ export class RoleFormComponent implements OnInit {
   loadPermissions() {
     this.isLoadingPermissions.set(true);
 
-    this.roleService
+    this.query
       .getPermissions()
       .pipe(
         finalize(() => {
@@ -179,15 +181,15 @@ export class RoleFormComponent implements OnInit {
     };
 
     const request = this.roleId
-      ? this.roleService.update(this.roleId, payload)
-      : this.roleService.create(payload);
+      ? this.mutation.update(this.roleId, payload)
+      : this.mutation.create(payload);
 
     request.subscribe({
       next: () => {
         this.toast.success(this.roleId ? 'Role updated successfully' : 'Role created successfully');
         this.router.navigate(['/roles']);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.toast.error(err.error?.message || 'Failed to save role');
         this.isSubmitting.set(false);
       },
