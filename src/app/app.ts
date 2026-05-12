@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
   imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('angular-rbac-starter');
