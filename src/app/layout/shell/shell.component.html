@@ -10,7 +10,7 @@
       </div>
 
       <div class="header-right">
-        <div class="user-profile" (click)="toggleDropdown()">
+        <div class="user-profile" (click)="toggleDropdown()" role="button" data-testid="shell-profile-trigger">
           <div class="user-info">
             <span class="user-name">{{ user()?.name ?? 'Anonymous' }}</span>
             <span class="user-role">{{ user()?.roleName ?? 'Unauthorized' }}</span>
