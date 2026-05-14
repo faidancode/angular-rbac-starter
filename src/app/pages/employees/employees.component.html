@@ -8,11 +8,13 @@
     <div class="page-header__actions">
       <div class="search-field">
         <svg lucideSearch class="search-icon" [size]="18"></svg>
-        <input type="text" placeholder="Search employees..." [ngModel]="query.searchQuery()"
+        <input type="text" placeholder="Search employees..." aria-label="Search employees"
+          [ngModel]="query.searchQuery()"
           (ngModelChange)="onSearch($event)" />
       </div>
 
-      <button *appHasPermission="'Employee:create'" class="btn btn-primary" (click)="openForm()">
+      <button *appHasPermission="'Employee:create'" class="btn btn-primary" (click)="openForm()"
+        aria-label="Add employee">
         <svg lucidePlus [size]="18"></svg>
         <span>Add Employee</span>
       </button>
@@ -70,11 +72,12 @@
             </td>
             <td>
               <div class="flex justify-end gap-2">
-                <button *appHasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)">
+                <button *appHasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)"
+                  aria-label="Edit employee">
                   <svg lucidePencil [size]="14"></svg>
                 </button>
                 <button *appHasPermission="'Employee:delete'" (click)="onDelete(employee.id)"
-                  class="action-icon-btn delete">
+                  class="action-icon-btn delete" aria-label="Delete employee">
                   <svg lucideTrash2 [size]="14"></svg>
                 </button>
               </div>
@@ -105,12 +108,13 @@
 
       <div class="flex items-center gap-6">
         <div class="flex items-center gap-2">
-          <button class="page-btn-minimal" [disabled]="query.page() === 1" (click)="onPageChange(query.page() - 1)">
+          <button class="page-btn-minimal" [disabled]="query.page() === 1" (click)="onPageChange(query.page() - 1)"
+            aria-label="Previous page">
             <svg lucideChevronLeft [size]="16"></svg>
           </button>
           <span class="page-info">Page {{ query.page() }}</span>
           <button class="page-btn-minimal" [disabled]="query.loading() || !query.hasMore()"
-            (click)="onPageChange(query.page() + 1)">
+            (click)="onPageChange(query.page() + 1)" aria-label="Next page">
             <svg lucideChevronRight [size]="16"></svg>
           </button>
         </div>

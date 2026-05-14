@@ -25,6 +25,7 @@ export class RolesComponent implements OnInit {
 
   readonly roles = signal<RoleDto[]>([]);
   readonly isLoading = signal(true);
+  readonly loadingPlaceholders = [1, 2, 3];
 
   ngOnInit() {
     this.fetchRoles();

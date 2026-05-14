@@ -8,11 +8,13 @@
     <div class="page-header__actions">
       <div class="search-field">
         <svg lucideSearch class="search-icon" [size]="18"></svg>
-        <input type="text" placeholder="Search user..." [ngModel]="query.searchQuery()"
+        <input type="text" placeholder="Search user..." aria-label="Search users"
+          [ngModel]="query.searchQuery()"
           (ngModelChange)="onSearch($event)" />
       </div>
 
-      <button *appHasPermission="'User:create'" class="btn btn-primary" (click)="openForm()">
+      <button *appHasPermission="'User:create'" class="btn btn-primary" (click)="openForm()"
+        aria-label="Add user">
         <svg lucidePlus [size]="18"></svg>
         <span>Add User</span>
       </button>
@@ -66,10 +68,10 @@
                       justify-content: flex-end;
                       gap: 0.25rem;
                     ">
-                <button class="action-icon-btn" (click)="openForm(data)">
+                <button class="action-icon-btn" (click)="openForm(data)" aria-label="Edit user">
                   <svg lucidePencil [size]="16"></svg>
                 </button>
-                <button (click)="onDelete(data.id)" class="action-icon-btn delete">
+                <button (click)="onDelete(data.id)" class="action-icon-btn delete" aria-label="Delete user">
                   <svg lucideTrash2 [size]="16"></svg>
                 </button>
               </div>
@@ -93,12 +95,13 @@
 
       <div class="flex items-center gap-6">
         <div class="flex items-center gap-2">
-          <button class="page-btn-minimal" [disabled]="query.page() === 1" (click)="onPageChange(query.page() - 1)">
+          <button class="page-btn-minimal" [disabled]="query.page() === 1" (click)="onPageChange(query.page() - 1)"
+            aria-label="Previous page">
             <svg lucideChevronLeft [size]="16"></svg>
           </button>
           <span class="page-info">Page {{ query.page() }}</span>
           <button class="page-btn-minimal" [disabled]="query.loading() || !query.hasMore()"
-            (click)="onPageChange(query.page() + 1)">
+            (click)="onPageChange(query.page() + 1)" aria-label="Next page">
             <svg lucideChevronRight [size]="16"></svg>
           </button>
         </div>

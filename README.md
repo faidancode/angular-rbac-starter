@@ -1,59 +1,115 @@
-# AngularRbacStarter
+# Angular RBAC Starter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Angular RBAC Starter is a role-based access control demo built with Angular 21, standalone components, signals, and a modern test stack.
 
-## Development server
+## Why This Project
 
-To start a local development server, run:
+This project focuses on practical frontend architecture patterns commonly used in production applications, including:
 
-```bash
-ng serve
-```
+- Modern Angular architecture using standalone components, signals, and lazy-loaded routes
+- Role-based route protection and UI permission gating for real-world access control patterns
+- Security-minded auth flow with refresh-token hydration and production environment replacement
+- Test coverage with Vitest unit tests and Playwright end-to-end tests
+- Clean separation of `core`, `shared`, `layout`, and `pages` for maintainability
+- Accessibility and UX polish with loading skeletons, aria labels, and keyboard-friendly controls
+- Production-oriented documentation through phase reports and implementation notes
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Stack
 
-## Code scaffolding
+- Angular 21
+- Angular Router
+- RxJS
+- Tailwind-ready styling
+- Vitest for unit tests
+- Playwright for end-to-end tests
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## What You Can Highlight In Interviews
 
-```bash
-ng generate component component-name
-```
+- You can explain how the app protects routes and controls feature access with RBAC.
+- You can discuss why access tokens stay in memory while refresh tokens are persisted.
+- You can show how the codebase is structured for scale instead of using one monolithic feature folder.
+- You can point to real testing practices instead of a scaffold-only test setup.
+- You can demonstrate accessibility improvements and production deployment readiness.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Requirements
 
-```bash
-ng generate --help
-```
+- Node.js 20 or newer
+- pnpm 10
 
-## Building
+## Setup
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Install dependencies:
 
 ```bash
-ng e2e
+pnpm install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Start the development server:
 
-## Additional Resources
+```bash
+pnpm start
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The app runs at `http://localhost:4200/`.
+
+## Commands
+
+Build the production bundle:
+
+```bash
+pnpm build
+```
+
+Run the app in watch mode for development builds:
+
+```bash
+pnpm watch
+```
+
+Run unit tests with Vitest:
+
+```bash
+pnpm test
+```
+
+Run Vitest in watch mode:
+
+```bash
+pnpm test:watch
+```
+
+Run the linter:
+
+```bash
+pnpm lint
+```
+
+Run Playwright end-to-end tests:
+
+```bash
+pnpm e2e
+```
+
+Open the Playwright UI:
+
+```bash
+pnpm e2e:ui
+```
+
+## Project Structure
+
+- `src/app/core` - auth, guards, interceptors, services, and utility code
+- `src/app/layout` - shell and sidebar layout
+- `src/app/pages` - feature pages
+- `src/app/shared` - reusable components and services
+- `docs` - implementation phase reports and planning notes
+
+## Environment
+
+- Development API config lives in `src/environments/environment.development.ts`
+- Production builds use `src/environments/environment.production.ts`
+- Application code imports from `src/environments/environment.ts` so Angular can swap files at build time
+
+## License
+
+This repository is licensed under the MIT License. See [LICENSE.md](LICENSE.md).

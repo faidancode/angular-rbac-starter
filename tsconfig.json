@@ -13,6 +13,8 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "5.0",
+    "moduleResolution": "bundler",
     "paths": {
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],

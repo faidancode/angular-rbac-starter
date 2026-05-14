@@ -125,6 +125,34 @@
   }
 }
 
+.stat-card--skeleton {
+  .icon-skeleton {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0;
+  }
+
+  .badge-skeleton {
+    width: 3.5rem;
+    height: 1rem;
+  }
+
+  .skeleton-line {
+    height: 1rem;
+    margin-bottom: 0.75rem;
+
+    &--label {
+      width: 65%;
+    }
+
+    &--value {
+      width: 40%;
+      height: 2.25rem;
+      margin-bottom: 0;
+    }
+  }
+}
+
 // Sharp Buttons
 .primary-button {
   background-color: v.$primary;

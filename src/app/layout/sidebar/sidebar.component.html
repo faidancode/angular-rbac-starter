@@ -20,8 +20,11 @@
         @for (item of visibleNavItems(); track item.label) {
           @if (item.children) {
             <button
+              type="button"
               class="nav-item group"
               (click)="toggleMenu(item)"
+              [attr.aria-label]="'Toggle ' + item.label + ' section'"
+              [attr.aria-expanded]="item.expanded"
               [class.expanded]="item.expanded"
             >
               <div class="active-indicator" [class.active]="item.expanded"></div>
@@ -44,11 +47,12 @@
             @if (item.expanded && !collapsed()) {
               <div class="nav-children">
                 @for (child of item.children; track child.route) {
-                  <a
-                    [routerLink]="child.route"
-                    routerLinkActive="active-link"
-                    class="nav-item nav-child"
-                  >
+                <a
+                  [routerLink]="child.route"
+                  routerLinkActive="active-link"
+                  class="nav-item nav-child"
+                  [attr.aria-label]="'Go to ' + child.label"
+                >
                     <div class="active-indicator"></div>
                     <span class="nav-label nav-label--child">{{ child.label }}</span>
                   </a>
@@ -61,6 +65,7 @@
               routerLinkActive="active-link"
               class="nav-item group"
               [attr.data-testid]="'nav-' + item.route"
+              [attr.aria-label]="'Go to ' + item.label"
             >
               <div class="active-indicator"></div>
 

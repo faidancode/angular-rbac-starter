@@ -33,6 +33,7 @@ interface StatCard {
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+  readonly loading = this.dashboardService.loading;
 
   ngOnInit(): void {
     this.dashboardService.fetchAll().subscribe();

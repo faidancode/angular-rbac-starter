@@ -129,3 +129,42 @@
   letter-spacing: 0.2em;
   font-size: 0.75rem;
 }
+
+.role-card--skeleton {
+  .card-header {
+    gap: 1rem;
+
+    .skeleton-line {
+      width: 70%;
+      height: 0.85rem;
+      margin-top: 0.75rem;
+
+      &--title {
+        width: 12rem;
+        height: 1.5rem;
+        margin-top: 0;
+      }
+    }
+
+    .skeleton-pill {
+      width: 4rem;
+      height: 1.1rem;
+    }
+  }
+
+  .permissions-list {
+    align-content: flex-start;
+    min-height: 5rem;
+  }
+
+  .skeleton-chip {
+    width: 5rem;
+    height: 1.25rem;
+  }
+
+  .card-footer {
+    .skeleton-button {
+      height: 2.75rem;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AbilityService } from '../services/ability.service';
 import { AuthService } from '../services/auth.service';
@@ -48,7 +48,9 @@ describe('Auth Guards', () => {
     it('should allow access when authenticated', () => {
       authServiceMock.isAuthenticated.mockReturnValue(true);
 
-      const result = TestBed.runInInjectionContext(() => authGuard());
+      const route = {} as ActivatedRouteSnapshot;
+      const state = {} as RouterStateSnapshot;
+      const result = TestBed.runInInjectionContext(() => authGuard(route, state));
 
       expect(result).toBe(true);
       expect(router.createUrlTree).not.toHaveBeenCalled();
@@ -57,7 +59,9 @@ describe('Auth Guards', () => {
     it('should redirect to login when not authenticated', () => {
       authServiceMock.isAuthenticated.mockReturnValue(false);
 
-      const result = TestBed.runInInjectionContext(() => authGuard());
+      const route = {} as ActivatedRouteSnapshot;
+      const state = {} as RouterStateSnapshot;
+      const result = TestBed.runInInjectionContext(() => authGuard(route, state));
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);
       expect(result).toEqual({ commands: ['/login'] });
@@ -70,8 +74,10 @@ describe('Auth Guards', () => {
       abilityServiceMock.can.mockReturnValue(true);
 
       const guard = permissionGuard('user.read');
+      const route = {} as ActivatedRouteSnapshot;
+      const state = {} as RouterStateSnapshot;
 
-      const result = TestBed.runInInjectionContext(() => guard());
+      const result = TestBed.runInInjectionContext(() => guard(route, state));
 
       expect(result).toBe(true);
     });
@@ -81,8 +87,10 @@ describe('Auth Guards', () => {
       abilityServiceMock.can.mockReturnValue(false);
 
       const guard = permissionGuard('user.read');
+      const route = {} as ActivatedRouteSnapshot;
+      const state = {} as RouterStateSnapshot;
 
-      const result = TestBed.runInInjectionContext(() => guard());
+      const result = TestBed.runInInjectionContext(() => guard(route, state));
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/forbidden']);
       expect(result).toEqual({ commands: ['/forbidden'] });
@@ -92,8 +100,10 @@ describe('Auth Guards', () => {
       abilityServiceMock.permissionsLoaded.mockReturnValue(false);
 
       const guard = permissionGuard('user.read');
+      const route = {} as ActivatedRouteSnapshot;
+      const state = {} as RouterStateSnapshot;
 
-      const result = TestBed.runInInjectionContext(() => guard());
+      const result = TestBed.runInInjectionContext(() => guard(route, state));
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);
       expect(result).toEqual({ commands: ['/login'] });
