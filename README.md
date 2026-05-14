@@ -23,17 +23,11 @@ This project focuses on practical frontend architecture patterns commonly used i
 - Vitest for unit tests
 - Playwright for end-to-end tests
 
-## What You Can Highlight In Interviews
-
-- You can explain how the app protects routes and controls feature access with RBAC.
-- You can discuss why access tokens stay in memory while refresh tokens are persisted.
-- You can show how the codebase is structured for scale instead of using one monolithic feature folder.
-- You can point to real testing practices instead of a scaffold-only test setup.
-- You can demonstrate accessibility improvements and production deployment readiness.
 
 ## Requirements
 
 - Node.js 20 or newer
+- Docker Desktop
 - pnpm 10
 
 ## Setup
