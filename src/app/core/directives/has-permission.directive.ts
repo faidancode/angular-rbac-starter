@@ -7,29 +7,23 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { AbilityService } from '../services/ability.service';
-import { parsePermission } from '../utils/permission.utils';
-import { AppPermission } from '../types/permission.type';
+import { AbilityService } from '@core/services/ability.service';
+import { parsePermission } from '@core/utils/permission.utils';
+import { AppPermission } from '@core/types/permission.type';
 
-// --- helper parser ---
-
-
-type PermissionInput =
-  | string
-  | string[]
-  | { action: string; subject: string }
-  | { action: string; subject: string }[];
+type PermissionEntry = AppPermission | { action: string; subject: string };
+type PermissionInput = PermissionEntry | PermissionEntry[];
 
 @Directive({
-  selector: '[hasPermission]',
+  selector: '[appHasPermission]',
   standalone: true,
 })
 export class HasPermissionDirective {
-  private tpl = inject(TemplateRef<any>);
+  private tpl = inject(TemplateRef<unknown>);
   private vcr = inject(ViewContainerRef);
   private ability = inject(AbilityService);
 
-  private _permission = signal<PermissionInput>('' as any);
+  private _permission = signal<PermissionInput | null>(null);
 
   constructor() {
     effect(() => {
@@ -38,23 +32,16 @@ export class HasPermissionDirective {
       if (!this.ability.permissionsLoaded()) return;
 
       const perm = this._permission();
+      if (!perm) return;
 
-      let allowed = false;
-
-      if (typeof perm === 'string') {
-        const p = parsePermission(perm);
-        allowed = this.ability.can(p.action, p.subject);
-      } else if (Array.isArray(perm)) {
-        allowed = perm.some((item) => {
-          if (typeof item === 'string') {
-            const p = parsePermission(item);
-            return this.ability.can(p.action, p.subject);
-          }
-          return this.ability.can(item.action, item.subject);
-        });
-      } else {
-        allowed = this.ability.can(perm.action, perm.subject);
-      }
+      const entries = Array.isArray(perm) ? perm : [perm];
+      const allowed = entries.some((item) => {
+        if (typeof item === 'string') {
+          const parsed = parsePermission(item);
+          return this.ability.can(parsed.action, parsed.subject);
+        }
+        return this.ability.can(item.action, item.subject);
+      });
 
       if (allowed) {
         this.vcr.createEmbeddedView(this.tpl);
@@ -63,7 +50,7 @@ export class HasPermissionDirective {
   }
 
   @Input()
-  set hasPermission(value: PermissionInput) {
+  set appHasPermission(value: PermissionInput) {
     this._permission.set(value);
   }
 }

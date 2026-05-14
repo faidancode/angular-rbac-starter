@@ -8,7 +8,7 @@
     <div class="page-header__actions">
       <div class="search-field"></div>
 
-      <button *hasPermission="'Role:create'" class="btn btn-primary" (click)="openCreate()">
+      <button *appHasPermission="'Role:create'" class="btn btn-primary" (click)="openCreate()">
         <span>Create Role</span>
       </button>
     </div>
@@ -38,14 +38,14 @@
 
         <div class="card-footer">
           <button
-            *hasPermission="'Role:update'"
+            *appHasPermission="'Role:update'"
             class="btn-action edit"
             (click)="openEdit(role.id)"
           >
             Edit Role
           </button>
           <button
-            *hasPermission="'Role:delete'"
+            *appHasPermission="'Role:delete'"
             class="btn-action delete"
             (click)="deleteRole(role.id)"
           >

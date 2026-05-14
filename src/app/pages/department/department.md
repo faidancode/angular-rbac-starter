@@ -126,7 +126,7 @@ cancelText: 'Batal'
           (ngModelChange)="onSearch($event)" />
       </div>
 
-      <button *hasPermission="'Department:create'" class="btn btn-primary" (click)="openForm()">
+      <button *appHasPermission="'Department:create'" class="btn btn-primary" (click)="openForm()">
         <svg lucidePlus [size]="18"></svg>
         <span>Add Department</span>
       </button>

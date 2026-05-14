@@ -12,7 +12,7 @@
           (ngModelChange)="onSearch($event)" />
       </div>
 
-      <button *hasPermission="'Employee:create'" class="btn btn-primary" (click)="openForm()">
+      <button *appHasPermission="'Employee:create'" class="btn btn-primary" (click)="openForm()">
         <svg lucidePlus [size]="18"></svg>
         <span>Add Employee</span>
       </button>
@@ -70,10 +70,10 @@
             </td>
             <td>
               <div class="flex justify-end gap-2">
-                <button *hasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)">
+                <button *appHasPermission="'Employee:update'" class="action-icon-btn" (click)="openForm(employee)">
                   <svg lucidePencil [size]="14"></svg>
                 </button>
-                <button *hasPermission="'Employee:delete'" (click)="onDelete(employee.id)"
+                <button *appHasPermission="'Employee:delete'" (click)="onDelete(employee.id)"
                   class="action-icon-btn delete">
                   <svg lucideTrash2 [size]="14"></svg>
                 </button>

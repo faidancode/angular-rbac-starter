@@ -48,7 +48,7 @@ describe('Auth Guards', () => {
     it('should allow access when authenticated', () => {
       authServiceMock.isAuthenticated.mockReturnValue(true);
 
-      const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+      const result = TestBed.runInInjectionContext(() => authGuard());
 
       expect(result).toBe(true);
       expect(router.createUrlTree).not.toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe('Auth Guards', () => {
     it('should redirect to login when not authenticated', () => {
       authServiceMock.isAuthenticated.mockReturnValue(false);
 
-      const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+      const result = TestBed.runInInjectionContext(() => authGuard());
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);
       expect(result).toEqual({ commands: ['/login'] });
@@ -71,7 +71,7 @@ describe('Auth Guards', () => {
 
       const guard = permissionGuard('user.read');
 
-      const result = TestBed.runInInjectionContext(() => guard({} as any, {} as any));
+      const result = TestBed.runInInjectionContext(() => guard());
 
       expect(result).toBe(true);
     });
@@ -82,7 +82,7 @@ describe('Auth Guards', () => {
 
       const guard = permissionGuard('user.read');
 
-      const result = TestBed.runInInjectionContext(() => guard({} as any, {} as any));
+      const result = TestBed.runInInjectionContext(() => guard());
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/forbidden']);
       expect(result).toEqual({ commands: ['/forbidden'] });
@@ -93,7 +93,7 @@ describe('Auth Guards', () => {
 
       const guard = permissionGuard('user.read');
 
-      const result = TestBed.runInInjectionContext(() => guard({} as any, {} as any));
+      const result = TestBed.runInInjectionContext(() => guard());
 
       expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);
       expect(result).toEqual({ commands: ['/login'] });

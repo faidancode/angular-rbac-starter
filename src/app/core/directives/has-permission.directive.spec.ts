@@ -7,10 +7,14 @@ import { HasPermissionDirective } from './has-permission.directive';
 @Component({
   standalone: true,
   imports: [HasPermissionDirective],
-  template: ` <div *hasPermission="permission" data-testid="protected">Protected Content</div> `,
+  template: ` <div *appHasPermission="permission" data-testid="protected">Protected Content</div> `,
 })
 class TestHostComponent {
-  permission: any = '';
+  permission:
+    | string
+    | string[]
+    | { action: string; subject: string }
+    | ({ action: string; subject: string }[]) = 'User:read';
 }
 
 describe('HasPermissionDirective', () => {
@@ -33,7 +37,9 @@ describe('HasPermissionDirective', () => {
     vi.clearAllMocks();
   });
 
-  const createComponent = (permission?: any) => {
+  const createComponent = (
+    permission?: string | string[] | { action: string; subject: string } | { action: string; subject: string }[],
+  ) => {
     const fixture = TestBed.createComponent(TestHostComponent);
 
     if (permission !== undefined) {

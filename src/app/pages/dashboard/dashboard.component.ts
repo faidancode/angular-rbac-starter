@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject } from '@angular/core';
-import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardService } from '@core/services/dashboard.service';
 import {
   LucideCalendarCheck,
   LucideCircleCheck,

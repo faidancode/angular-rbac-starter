@@ -2,8 +2,8 @@ import { Injectable, computed, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap, throwError, catchError, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { AbilityService } from './ability.service';
+import { environment } from '@env/environment';
+import { AbilityService } from '@core/services/ability.service';
 
 // --- Types ---
 export interface AuthUser {

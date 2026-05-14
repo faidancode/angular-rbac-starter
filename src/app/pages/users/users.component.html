@@ -12,7 +12,7 @@
           (ngModelChange)="onSearch($event)" />
       </div>
 
-      <button *hasPermission="'User:create'" class="btn btn-primary" (click)="openForm()">
+      <button *appHasPermission="'User:create'" class="btn btn-primary" (click)="openForm()">
         <svg lucidePlus [size]="18"></svg>
         <span>Add User</span>
       </button>

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, inject, input, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
-  LucideCpu,
   LucideLayoutDashboard,
   LucideUsers,
   LucideKey,
@@ -11,9 +10,9 @@ import {
   LucideLayoutGrid
 } from '@lucide/angular';
 
-import { AbilityService } from '../../core/services/ability.service';
+import { AbilityService } from '@core/services/ability.service';
 import { NavItem } from './sidebar.types';
-import { parsePermission } from '../../core/utils/permission.utils';
+import { parsePermission } from '@core/utils/permission.utils';
 
 @Component({
   selector: 'app-sidebar',

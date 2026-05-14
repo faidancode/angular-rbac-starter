@@ -2,10 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER 
 import { provideRouter, withPreloading, PreloadAllModules, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { errorHandlerInterceptor } from './core/interceptors/error-handler.interceptor';
+import { authInterceptor } from '@core/interceptors/auth.interceptor';
+import { errorHandlerInterceptor } from '@core/interceptors/error-handler.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from '@core/services/auth.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export function initializeAuth(auth: AuthService) {
