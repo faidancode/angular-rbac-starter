@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideArrowUpDown,
   LucideChevronLeft,
@@ -45,6 +48,9 @@ export class EmployeesComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  // --- Search Debouncing ---
+  private searchSubject = new Subject<string>();
+
   // --- Icons ---
   protected readonly LucideSearch = LucideSearch;
   protected readonly LucidePlus = LucidePlus;
@@ -53,6 +59,20 @@ export class EmployeesComponent implements OnInit {
   protected readonly LucideArrowUpDown = LucideArrowUpDown;
   protected readonly LucideTrash2 = LucideTrash2;
   protected readonly LucidePencil = LucidePencil;
+
+  constructor() {
+    // Setup search debounce: wait 300ms after user stops typing before making API call
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed(),
+      )
+      .subscribe((query: string) => {
+        this.query
+          .fetchAll(1, false, query, this.query.limit(), this.query.sort())
+          .subscribe();
+      });
+  }
 
   ngOnInit() {
     this.fetchData();
@@ -79,9 +99,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   onSearch(query: string) {
-    this.query
-      .fetchAll(1, false, query, this.query.limit(), this.query.sort())
-      .subscribe();
+    this.searchSubject.next(query);
   }
 
   onLimitChange(limit: number) {

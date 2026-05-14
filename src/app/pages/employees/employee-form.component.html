@@ -57,9 +57,9 @@
             <label for="positionId">Position</label>
             <select id="positionId" formControlName="positionId">
               <option value="" disabled>
-                {{ positionQuery.loading() ? 'Loading positions...' : 'Select position' }}
+                {{ positionsLoading() ? 'Loading positions...' : 'Select position' }}
               </option>
-              @for (position of positionQuery.positions(); track position.id) {
+              @for (position of positions(); track position.id) {
               <option [value]="position.id">{{ position.name }}</option>
               }
             </select>

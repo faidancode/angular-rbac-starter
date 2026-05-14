@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Employee, EmployeePayload } from '../../core/types/api.types';
 import { ToastService } from '../../shared/services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeMutationService } from '../../core/services/employees/employee-mutation.service';
-import { PositionQueryService } from '../../core/services/positions/position-query.service';
 import { EmployeeQueryService } from '../../core/services/employees/employee-query.service';
+import { ReferenceDataService } from '../../core/services/reference-data.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -19,7 +19,7 @@ export class EmployeeFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private employeeQuery = inject(EmployeeQueryService);
   private employeeMutation = inject(EmployeeMutationService);
-  protected readonly positionQuery = inject(PositionQueryService);
+  private referenceData = inject(ReferenceDataService);
   private toast = inject(ToastService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -30,6 +30,10 @@ export class EmployeeFormComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   loading = signal<boolean>(false);
   submitted = signal<boolean>(false);
+  positionsLoading = signal<boolean>(false);
+
+  // Cached positions from reference data service
+  positions = signal<any[]>([]);
 
   employeeForm: FormGroup = this.fb.group({
     nip: ['', [Validators.required]],
@@ -63,13 +67,18 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.positionQuery.items().length && !this.positionQuery.loading()) {
-      const previousLimit = this.positionQuery.limit();
-      this.positionQuery.fetchAll(1, false, '', 100).subscribe({
-        next: () => this.positionQuery.setLimit(previousLimit),
-        error: () => this.positionQuery.setLimit(previousLimit),
-      });
-    }
+    // Load positions using cached reference data service
+    this.positionsLoading.set(true);
+    this.referenceData.getPositions(100).subscribe({
+      next: (res) => {
+        this.positions.set(res.data || []);
+        this.positionsLoading.set(false);
+      },
+      error: () => {
+        this.positionsLoading.set(false);
+        this.toast.error('Failed to load positions');
+      },
+    });
   }
 
   loadEmployee(id: string) {

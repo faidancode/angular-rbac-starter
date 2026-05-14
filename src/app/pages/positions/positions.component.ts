@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideArrowUpDown,
   LucideChevronLeft,
@@ -44,6 +47,9 @@ export class PositionComponent implements OnInit {
   private modal = inject(ModalService);
   private toast = inject(ToastService);
 
+  // --- Search Debouncing ---
+  private searchSubject = new Subject<string>();
+
   // --- Icons ---
   protected readonly LucideSearch = LucideSearch;
   protected readonly LucidePlus = LucidePlus;
@@ -59,6 +65,18 @@ export class PositionComponent implements OnInit {
     const end = this.query.page() * this.query.limit();
     return end > this.query.total() ? this.query.total() : end;
   });
+
+  constructor() {
+    // Setup search debounce: wait 300ms after user stops typing before making API call
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed(),
+      )
+      .subscribe((query: string) => {
+        this.query.fetchAll(1, false, query).subscribe();
+      });
+  }
 
   ngOnInit() {
     this.fetchData();
@@ -87,7 +105,7 @@ export class PositionComponent implements OnInit {
   }
 
   onSearch(query: string) {
-    this.query.fetchAll(1, false, query).subscribe();
+    this.searchSubject.next(query);
   }
 
   onLimitChange(limit: number) {
